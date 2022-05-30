@@ -86,7 +86,8 @@ function draw() {
                 enemyBullet[j].delay = j;
                 enemyBullet[j].move();
                 enemyBullet[j].display();
-                flightHitBox(enemyBullet[j], flight);
+                flight.flightHitBox(enemyBullet[j]);
+                flight.isFlightDead();
             }
             enemy.display();
         }
@@ -105,30 +106,14 @@ function draw() {
         for (let i = 0; i < 10; i++) {
             flightShoot[i].move();
             flightShoot[i].display();
-            enemyHitBox(flightShoot[i], enemy);
+            enemy.enemyHitBox(flightShoot[i]);
+            if(enemy.isEnemyDead() == true){
+                mode = MODE_GAME_WIN;
+            }
         }
         flightShootDelay--;
         hitDelay--;
         /* 비행기 위치 이동 translate */
-    }
-}
-
-function flightHitBox(enemyBullet, flight) {
-    if (abs(enemyBullet.x - flight.x) < 4 && abs(enemyBullet.y - flight.y) < 4) {
-        if (hitDelay < 0) {
-            hitDelay = 60;
-            flight.life--;
-        }
-
-        if (flight.life < 0) {
-            mode = MODE_GAME_OVER;
-        }
-    }
-}
-
-function enemyHitBox(flightBullet, enemy) {
-    if (abs(flightBullet.x - enemy.x) < 40 && flightBullet.y == enemy.y) {
-        enemy.life--;
     }
 }
 

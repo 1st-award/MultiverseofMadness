@@ -24,8 +24,6 @@ class EnemyShooter {
     lifePerColor() {
         if (this.life == 1) {
             fill(0);
-            enemy.state = ENEMY_DIE;
-            mode = MODE_GAME_WIN;
         }
         if (this.life <= 3 && this.life > 1) {
             if (frameCount % 2 == 1) {
@@ -41,6 +39,19 @@ class EnemyShooter {
         }
         if (this.life > 10) {
             fill(255);
+        }
+    }
+
+    enemyHitBox(flightBullet) {
+        if (abs(flightBullet.x - this.x) < 40 && flightBullet.y == this.y) {
+            enemy.life--;
+        }
+    }
+
+    isEnemyDead(){
+        if (this.life < 0) {
+            this.state = ENEMY_DIE;
+            return true;
         }
     }
 }

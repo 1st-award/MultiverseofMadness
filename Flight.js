@@ -70,4 +70,19 @@ class Flight {
             this.y = -limitY;
         }
     }
+
+    flightHitBox(enemyBullet) {
+        if (abs(enemyBullet.x - this.x) < 4 && abs(enemyBullet.y - this.y) < 4) {
+            if (hitDelay < 0) {
+                hitDelay = 60;
+                flight.life--;
+            }
+        }
+    }
+
+    isFlightDead(){
+        if(this.life < 0){
+            mode = MODE_GAME_OVER;
+        }
+    }
 }
