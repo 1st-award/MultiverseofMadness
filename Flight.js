@@ -18,12 +18,14 @@ class Flight {
         this.flightKeyPressed();
 
         fill(125);
+        if(hitDelay > 0) fill(255,0,0);
         triangle(-5, 2, 0, -3, 5, 2);
         triangle(-5, 2, -2.5, 2, -3.75, 3.75);
         fill(0);
         triangle(-2.5, 2, 0, 2, -1.25, 2.75);
         triangle(0, 2, 2.5, 2, 1.25, 2.75);
         fill(125);
+        if(hitDelay > 0) fill(255,0,0);
         triangle(2.5, 2, 5, 2, 3.75, 3.75);
         noFill();
     }
@@ -82,7 +84,7 @@ class Flight {
 
     isFlightDead(){
         if(this.life < 0){
-            mode = MODE_GAME_OVER;
+            return true;
         }
     }
 }
