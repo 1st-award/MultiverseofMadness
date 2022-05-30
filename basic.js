@@ -52,6 +52,8 @@ function draw() {
         score = 0;
         enemy.x = 0;
         enemy.y = -180;
+        hitDelay = 0;
+        flightShootDelay = 0;
 
         for (let i = 0; i < 200; i++) {
             enemyBullet[i].x = 10000;
@@ -64,33 +66,25 @@ function draw() {
         }
     }
 
+    /* 타이틀 */
     if (mode == MODE_GAME_TITLE) {
         background(0);
     }
 
+    /* 게임 오버 */
     if (mode == MODE_GAME_OVER) {
         background(127);
     }
 
+    /* 게임 승리 */
     if (mode == MODE_GAME_WIN) {
         background(255);
     }
 
+    /* 인 게임 */
     if (mode == MODE_IN_GAME) {
         score++;
         background(80, 188, 223);
-
-        /* 적이 살아 있을 시 */
-        if (enemy.state != 0) {
-            for (let j = 0; j < 200; j++) {
-                enemyBullet[j].delay = j;
-                enemyBullet[j].move();
-                enemyBullet[j].display();
-                flight.flightHitBox(enemyBullet[j]);
-                flight.isFlightDead();
-            }
-            enemy.display();
-        }
 
         /* 스페이스 바를 누를 시 총알이 발사 */
         if (keyIsDown(SPACEBAR)) {
@@ -101,8 +95,25 @@ function draw() {
                 countShoot++;
             }
         }
+
+        /* 적이 살아 있을 시 */
+        if (enemy.state != 0) {
+            for (let j = 0; j < 200; j++) {
+                enemyBullet[j].delay = j;
+                enemyBullet[j].movePerTime();
+                enemyBullet[j].display();
+                flight.flightHitBox(enemyBullet[j]);
+            }
+            enemy.display();
+        }
+
+        /* 비행기 */
+        if(flight.isFlightDead()){
+            mode = MODE_GAME_OVER;
+        }
         flight.display();
-        /* 총알 출력 */
+
+        /* 비행기 총알 출력 */
         for (let i = 0; i < 10; i++) {
             flightShoot[i].move();
             flightShoot[i].display();
@@ -111,9 +122,10 @@ function draw() {
                 mode = MODE_GAME_WIN;
             }
         }
+
+        /* delay 감소 */
         flightShootDelay--;
         hitDelay--;
-        /* 비행기 위치 이동 translate */
     }
 }
 
