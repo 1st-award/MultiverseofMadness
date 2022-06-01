@@ -10,7 +10,7 @@ class Flight {
 
     display() {
         push();
-        translate(this.x, this.y, 200);
+        translate(this.x, this.y, 100);
         this.flightShape();
         pop();
     }
@@ -83,8 +83,8 @@ class Flight {
 
     limitFlightField() {
         /* 비행기가 움직일 수 있는 범위를 제한합니다 */
-        var limitX = 180;
-        var limitY = 130;
+        var limitX = 235;
+        var limitY = 235;
 
         if (this.x > limitX) {
             this.x = limitX;

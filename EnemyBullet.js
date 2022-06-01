@@ -12,7 +12,7 @@ class EnemyBullet {
     }
 
 
-    movePerTime() {
+    movePerTime(bossPosX, bossPosY) {
         if (this.time > this.delay) {
             if(this.axisX != 0 || this.axisY != 0) {
                 this.move();
@@ -40,7 +40,7 @@ class EnemyBullet {
 
     display() {
         push();
-        translate(this.x, this.y, 200);
+        translate(this.x, this.y, 100);
         fill(255, 255, 0);
         sphere(4);
         pop();

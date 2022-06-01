@@ -8,6 +8,7 @@ let flightShoot = [];
 const PLAYER_SHOOT_DELAY = 30;
 // Enemy
 let enemy;
+let birdBoss;
 let enemyBullet = [];
 // Item
 let countItemEffectTime = -1;
@@ -39,7 +40,8 @@ function setup() {
     noStroke();
 
     flight = new Flight();
-    enemy = new EnemyShooter();
+    enemy = new EnemyShooter(0, -200, 0, 10);
+    birdBoss = new BirdBoss(0,-200, 1, 10 );
 
     let itemVector = createVector(4, 3);
     item = new PlayerItem(itemVector, 255);
@@ -61,11 +63,8 @@ function draw() {
         flight.life = 5;
         flight.x = 0;
         flight.y = 0;
-        enemy.life = 10;
-        enemy.state = ENEMY_SURVIVE;
+        birdBoss = new BirdBoss(0,-200, 1, 10 );
         score = 0;
-        enemy.x = 0;
-        enemy.y = -180;
         hitDelay = 0;
         flightShootDelay = 0;
 
@@ -114,7 +113,10 @@ function draw() {
             }
             enemy.display();
         }
-
+        if (birdBoss.state != 0){
+            birdBoss.behavior(flight.x, flight.y);
+            birdBoss.display();
+        }
         /* 비행기 */
         if(flight.isFlightDead()){
             mode = MODE_GAME_OVER;
@@ -125,10 +127,8 @@ function draw() {
         for (let i = 0; i < 10; i++) {
             flightShoot[i].move();
             flightShoot[i].display();
-            enemy.enemyHitBox(flightShoot[i], flight.damage);
-            if(enemy.isEnemyDead() == true){
-                mode = MODE_GAME_WIN;
-            }
+            enemy.hitBox(flightShoot[i], flight.damage);
+            birdBoss.hitBox(flightShoot[i], flight.damage);
         }
 
         /* 비행기와 아이템 상호작용 */
