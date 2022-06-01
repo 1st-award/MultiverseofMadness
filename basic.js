@@ -11,6 +11,11 @@ let enemy;
 let birdBoss;
 let enemyBullet = [];
 let enemyMissile;
+//Background
+let cloude1 =[];
+let cloude2 =[];
+let cloude3 =[];
+let skyeimg;
 // Item
 let countItemEffectTime = -1;
 let enemyBulletStop = false;
@@ -31,6 +36,7 @@ const MODE_GAME_WIN = 3;
 
 
 function preload() {
+  skyeimg = loadImage('resources/skye.png');
 }
 
 
@@ -54,6 +60,17 @@ function setup() {
     }
 
     enemyMissile = new EnemyMissile();
+
+    //비행기 보스 배경
+    for(let i=0;i<10;i++){
+        cloude1[i] = new Background_Cloude1();
+    }
+    for(let i=0;i<10;i++){
+        cloude2[i] = new Background_Cloude2();
+    }
+    for(let i=0;i<10;i++){
+        cloude3[i]= new Background_Cloude3();
+    }
 }
 
 
@@ -72,7 +89,6 @@ function draw() {
             enemyBullet[i].x = 10000;
             enemyBullet[i].y = 0;
         }
-
 
         for (let i = 0; i < 10; i++) {
             flightShoot[i].x = 10000;
@@ -99,6 +115,31 @@ function draw() {
     if (mode == MODE_IN_GAME) {
         score++;
         background(80, 188, 223);
+
+        //배경 이미지 불러오기
+        image(skyeimg,-300,-300);
+
+        //비행기 보스 배경
+    for(let i=0;i<10;i++){
+    cloude1[i].display();
+    cloude2[i].display();
+    cloude3[i].display();
+      push();
+      cloude1[i].y += 3;
+      if(cloude1[i].y >500){
+        cloude1[i].y = random(-400,-550);
+      }
+      cloude2[i].y += 8;
+      if(cloude2[i].y >500){
+        cloude2[i].y = random(-400,-600);
+      }
+      cloude3[i].y += 3;
+      if(cloude3[i].y > 500){
+        cloude3[i].y = random(-400,-700);
+      }
+      pop();
+        }
+        //배경 끝
 
         /* 적이 살아 있을 시 */
         if (enemy.state != 0) {
@@ -160,7 +201,6 @@ function draw() {
         hitDelay--;
     }
 }
-
 
 function checkItemEffectListener() {
     /* 아이템 효과 시간 체크 함수 */
