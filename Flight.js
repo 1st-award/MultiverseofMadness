@@ -83,21 +83,6 @@ class Flight {
         }
     }
 
-    checkItemEffectListener() {
-        /* 아이템 효과 시간 체크 함수 */
-        if(countItemEffectTime < 1) {
-            this.resetPlayerStatus();
-        }
-        else {
-            countItemEffectTime -= 1;
-        }
-    }
-
-    resetPlayerStatus() {
-        /* 플레이어 상태 리셋 함수 */
-        this.speed = 3;
-    }
-
     isFlightDead(){
         if(this.life < 0){
             return true;
