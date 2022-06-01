@@ -42,9 +42,9 @@ class EnemyShooter {
         }
     }
 
-    enemyHitBox(flightBullet) {
+    enemyHitBox(flightBullet, flightDamage) {
         if (abs(flightBullet.x - this.x) < 40 && flightBullet.y == this.y) {
-            enemy.life--;
+            enemy.life -= flightDamage;
         }
     }
 
