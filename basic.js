@@ -7,6 +7,10 @@ let flight;
 let enemy;
 let enemyBullet = [];
 let flightShoot = [];
+let cloude1 =[];
+let cloude2 =[];
+let cloude3 =[];
+let skyeimg;
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
@@ -17,6 +21,7 @@ const MODE_GAME_WIN = 3;
 
 
 function preload() {
+  skyeimg = loadImage('resources/skye.png');
 }
 
 
@@ -35,6 +40,16 @@ function setup() {
 
     for (let i = 0; i < 200; i++) {
         enemyBullet[i] = new EnemyBullet();
+    }
+    //비행기 보스 배경 
+    for(let i=0;i<10;i++){
+        cloude1[i] = new Background_Cloude1();
+}
+    for(let i=0;i<10;i++){
+        cloude2[i] = new Background_Cloude2();
+    }
+    for(let i=0;i<10;i++){
+        cloude3[i]= new Background_Cloude3();
     }
 }
 
@@ -85,7 +100,32 @@ function draw() {
     if (mode == MODE_IN_GAME) {
         score++;
         background(80, 188, 223);
-
+        
+        //배경 이미지 불러오기
+        image(skyeimg,-300,-300);
+        
+        //비행기 보스 배경
+    for(let i=0;i<10;i++){
+    cloude1[i].display();
+    cloude2[i].display();
+    cloude3[i].display();
+      push();
+      cloude1[i].y += 3;
+      if(cloude1[i].y >500){
+        cloude1[i].y = random(-400,-550);
+      }
+      cloude2[i].y += 8;
+      if(cloude2[i].y >500){
+        cloude2[i].y = random(-400,-600);
+      }
+      cloude3[i].y += 3;
+      if(cloude3[i].y > 500){
+        cloude3[i].y = random(-400,-700);
+      }
+      pop();
+        }
+        //배경 끝
+    
         /* 스페이스 바를 누를 시 총알이 발사 */
         if (keyIsDown(SPACEBAR)) {
             if (flightShootDelay <= 0) {
@@ -128,5 +168,3 @@ function draw() {
         hitDelay--;
     }
 }
-
-
