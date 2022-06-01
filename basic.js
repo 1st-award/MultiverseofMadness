@@ -31,11 +31,32 @@ const MODE_GAME_OVER = 2;
 const ENEMY_DIE = 0;
 const ENEMY_SURVIVE = 1;
 const MODE_GAME_WIN = 3;
-
-
+// Image
+let titleBackground;
+let buttonEmptyImage;
+let buttonQuitImage;
+let buttonStartImage;
+let buttonTitleImage;
+let textGameOverImage;
+let textScoreImage;
+let textTitleImage;
+let textUserNameImage;
+let textVictoryImage;
+// Title
+let titleState = 0;
 
 function preload() {
   skyeimg = loadImage('resources/skye.png');
+  titleBackground = loadImage('resources/bg.png');
+  buttonEmptyImage = loadImage('resources/bt_empty.png');
+  buttonQuitImage = loadImage('resources/bt_quit.png');
+  buttonStartImage = loadImage('resources/bt_start.png');
+  buttonTitleImage = loadImage('resources/bt_totitle.png');
+  textGameOverImage = loadImage('resources/tex_gameover.png');
+  textScoreImage = loadImage('resources/tex_score.png');
+  textTitleImage = loadImage('resources/tex_title.png');
+  textUserNameImage = loadImage('resources/tex_username.png');
+  textVictoryImage = loadImage('resources/tex_victory.png');
 }
 
 
@@ -58,8 +79,6 @@ function setup() {
         enemyBullet[i] = new EnemyBullet();
     }
 
-    enemyMissile = new EnemyMissile();
-
     //비행기 보스 배경
     for(let i=0;i<10;i++){
         cloude1[i] = new Background_Cloude1();
@@ -75,28 +94,18 @@ function setup() {
 
 function draw() {
     clear();
-    if (keyCode === ENTER) {
-        mode = MODE_IN_GAME;
-        flight = new Flight();
-        birdBoss = new BirdBoss(0,-200, 0, 10 );
-        enemy = new EnemyShooter(0, -200, 1, 10);
-        score = 0;
-        flightShootDelay = 0;
-
-        for (let i = 0; i < 200; i++) {
-            enemyBullet[i].x = 10000;
-            enemyBullet[i].y = 0;
-        }
-
-        for (let i = 0; i < 10; i++) {
-            flightShoot[i].x = 10000;
-            flightShoot[i].y = 0;
-        }
-    }
 
     /* 타이틀 */
     if (mode == MODE_GAME_TITLE) {
-        background(0);
+        image(titleBackground,-300,-300,600,600);
+        if(titleState == 0) rect(-100,50,200,50);
+        if(titleState == 1) rect(-100,120,200,50);
+        if(titleState == 2) rect(-100,190,200,50);
+        image(textTitleImage,-100,-200,200,200);
+        image(buttonStartImage,-100,50,200,50);
+        image(buttonEmptyImage,-100,120,200,50);
+        image(buttonQuitImage,-100,190,200,50);
+        fill(255, 0, 0);
     }
 
     /* 게임 오버 */
@@ -118,24 +127,24 @@ function draw() {
         image(skyeimg,-300,-300);
 
         //비행기 보스 배경
-    for(let i=0;i<10;i++){
-    cloude1[i].display();
-    cloude2[i].display();
-    cloude3[i].display();
-      push();
-      cloude1[i].y += 3;
-      if(cloude1[i].y >500){
-        cloude1[i].y = random(-400,-550);
-      }
-      cloude2[i].y += 8;
-      if(cloude2[i].y >500){
-        cloude2[i].y = random(-400,-600);
-      }
-      cloude3[i].y += 3;
-      if(cloude3[i].y > 500){
-        cloude3[i].y = random(-400,-700);
-      }
-      pop();
+        for(let i=0;i<10;i++){
+            cloude1[i].display();
+            cloude2[i].display();
+            cloude3[i].display();
+            push();
+            cloude1[i].y += 3;
+            if(cloude1[i].y >500){
+                cloude1[i].y = random(-400,-550);
+            }
+            cloude2[i].y += 8;
+            if(cloude2[i].y >500){
+                cloude2[i].y = random(-400,-600);
+            }
+            cloude3[i].y += 3;
+            if(cloude3[i].y > 500){
+                cloude3[i].y = random(-400,-700);
+            }
+            pop();
         }
         //배경 끝
 
@@ -219,4 +228,43 @@ function resetPlayerStatus() {
     enemyBulletStop = false;
     flight.speed = 3;
     flight.damage = 1;
+}
+
+function keyPressed() {
+    if(mode == MODE_GAME_TITLE) {
+        if(keyCode === UP_ARROW){
+            titleState = (titleState+2)%3;
+            print(titleState);
+        }
+        if(keyCode === DOWN_ARROW){
+            titleState = (titleState+1)%3;
+            print(titleState);
+        }
+        if(keyCode === ENTER){
+            if(titleState == 0){
+                mode = MODE_IN_GAME;
+            }
+        }
+    }
+    if(mode == MODE_IN_GAME){
+        if (keyCode === ENTER) {
+            mode = MODE_IN_GAME;
+            flight = new Flight();
+            birdBoss = new BirdBoss(0, -200, 0, 10);
+            enemy = new EnemyShooter(0, -200, 1, 10);
+            enemyMissile = new EnemyMissile();
+            score = 0;
+            flightShootDelay = 0;
+
+            for (let i = 0; i < 200; i++) {
+                enemyBullet[i].x = 10000;
+                enemyBullet[i].y = 0;
+            }
+
+            for (let i = 0; i < 10; i++) {
+                flightShoot[i].x = 10000;
+                flightShoot[i].y = 0;
+            }
+        }
+    }
 }
