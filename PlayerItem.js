@@ -9,7 +9,19 @@ class PlayerItem {
         this.itemRadius = 20;
         this.colorAlpha = colorAlpha;
         this.itemType = int(random(3));
+        this.colorVector = this.selectColor();
         this.countItemDisplayCoolTime = -1;
+    }
+
+    selectColor() {
+        switch(this.itemType) {
+            case ITEM_SPEED_UP:
+                return createVector(255, 0, 0);
+            case ITEM_DAMAGE_UP:
+                return createVector(0, 255, 0);
+            case ITEM_BULLET_STOP:
+                return createVector(0, 0, 255);
+        }
     }
 
     movePlayerItem() {
@@ -51,7 +63,7 @@ class PlayerItem {
         this.itemCoolTimeListener();
         this.movePlayerItem();
         push();
-        fill(255, 255, 255, this.colorAlpha);
+        fill(this.colorVector.x, this.colorVector.y, this.colorVector.z, this.colorAlpha);
         circle(this.itemPosition.x, this.itemPosition.y, this.itemRadius);
         pop();
     }
