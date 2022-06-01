@@ -3,6 +3,7 @@ class Flight {
         this.life = 5;
         this.x = 0;
         this.y = 0;
+        this.speed = 3;
     }
 
     display() {
@@ -35,21 +36,21 @@ class Flight {
         /* 비행기 및 카메라 조절 함수 */
 
         if (keyIsDown(UP_ARROW)) {
-            this.y -= 3;
+            this.y -= this.speed;
         }
 
         if (keyIsDown(DOWN_ARROW)) {
-            this.y += 3;
+            this.y += this.speed;
         }
 
         if (keyIsDown(LEFT_ARROW)) {
             rotateY(-PI / 3);
-            this.x -= 3;
+            this.x -= this.speed;
         }
 
         if (keyIsDown(RIGHT_ARROW)) {
             rotateY(PI / 3);
-            this.x += 3;
+            this.x += this.speed;
         }
         this.limitFlightField();
     }
@@ -80,6 +81,21 @@ class Flight {
                 flight.life--;
             }
         }
+    }
+
+    checkItemEffectListener() {
+        /* 아이템 효과 시간 체크 함수 */
+        if(countItemEffectTime < 1) {
+            this.resetPlayerStatus();
+        }
+        else {
+            countItemEffectTime -= 1;
+        }
+    }
+
+    resetPlayerStatus() {
+        /* 플레이어 상태 리셋 함수 */
+        this.speed = 3;
     }
 
     isFlightDead(){
