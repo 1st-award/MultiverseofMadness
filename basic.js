@@ -1,21 +1,23 @@
 // Player
 let flightShootDelayCount = 0;
-const PLAYER_SHOOT_DELAY = 30;
-var mode;
-var score = 0;
-let hitDelay = 0;
+let flightBombDelayCount = 0;
 let countShoot = 0;
+let hitDelay = 0;
 let flight;
+let flightShoot = [];
+const PLAYER_SHOOT_DELAY = 30;
+// Enemy
 let enemy;
 let enemyBullet = [];
-let flightShoot = [];
 // Item
 let countItemEffectTime = -1;
-let bulletStop = false;
+let enemyBulletStop = false;
 const ITEM_SPEED_UP = 0;
 const ITEM_DAMAGE_UP = 1;
 const ITEM_BULLET_STOP = 2;
 // Game
+var mode;
+var score = 0;
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
@@ -108,15 +110,26 @@ function draw() {
             }
         }
 
+        if (keyIsDown(70)) {
+            if(flightBombDelayCount <= 0) {
+                flightBombDelayCount = 180;
+                for (let i = 0; i < 200; i++) {
+                    enemyBullet[i] = new EnemyBullet();
+                }
+            }
+        }
+
         /* 적이 살아 있을 시 */
         if (enemy.state != 0) {
-            for (let j = 0; j < 200; j++) {
-                if (bulletStop == false) {
-                    enemyBullet[j].delay = j;
-                    enemyBullet[j].movePerTime();
+            if(flightBombDelayCount < 0) {
+                for (let j = 0; j < 200; j++) {
+                    if (enemyBulletStop == false) {
+                        enemyBullet[j].delay = j;
+                        enemyBullet[j].movePerTime();
+                    }
+                    enemyBullet[j].display();
+                    flight.flightHitBox(enemyBullet[j]);
                 }
-                enemyBullet[j].display();
-                flight.flightHitBox(enemyBullet[j]);
             }
             enemy.display();
         }
@@ -131,7 +144,7 @@ function draw() {
         for (let i = 0; i < 10; i++) {
             flightShoot[i].move();
             flightShoot[i].display();
-            enemy.enemyHitBox(flightShoot[i]);
+            enemy.enemyHitBox(flightShoot[i], flight.damage);
             if(enemy.isEnemyDead() == true){
                 mode = MODE_GAME_WIN;
             }
@@ -143,9 +156,10 @@ function draw() {
                 flight.speed = 5;
                 break;
             case ITEM_DAMAGE_UP:
+                flight.damage = 2;
                 break;
             case ITEM_BULLET_STOP:
-                bulletStop = true;
+                enemyBulletStop = true;
                 break;
         }
 
@@ -155,6 +169,7 @@ function draw() {
 
         /* delay 감소 */
         flightShootDelayCount--;
+        flightBombDelayCount--;
         hitDelay--;
     }
 }
@@ -173,6 +188,7 @@ function checkItemEffectListener() {
 
 function resetPlayerStatus() {
     /* 아이템 효과 리셋 함수 */
-    bulletStop = false;
+    enemyBulletStop = false;
     flight.speed = 3;
+    flight.damage = 1;
 }

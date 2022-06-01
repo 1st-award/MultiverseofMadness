@@ -4,6 +4,7 @@ class Flight {
         this.x = 0;
         this.y = 0;
         this.speed = 3;
+        this.damage = 1;
     }
 
     display() {
@@ -52,6 +53,7 @@ class Flight {
             rotateY(PI / 3);
             this.x += this.speed;
         }
+
         this.limitFlightField();
     }
 
