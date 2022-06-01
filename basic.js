@@ -9,6 +9,12 @@ let flight;
 let enemy;
 let enemyBullet = [];
 let flightShoot = [];
+// Item
+let countItemEffectTime = 0;
+const ITEM_SPEED_UP = 0;
+const ITEM_DAMAGE_UP = 1;
+const ITEM_BULLET_STOP = 2;
+// Game
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
@@ -31,7 +37,9 @@ function setup() {
 
     flight = new Flight();
     enemy = new EnemyShooter();
-    item = new PlayerItem();
+
+    let itemVector = createVector(4, 3);
+    item = new PlayerItem(itemVector, 255);
 
     for (let i = 0; i < 10; i++) {
         flightShoot[i] = new FlightShoot();
@@ -93,7 +101,9 @@ function draw() {
         if (keyIsDown(SPACEBAR)) {
             if (flightShootDelayCount <= 0) {
                 flightShootDelayCount = PLAYER_SHOOT_DELAY;
-                shootPlayerBullet();
+                flightShoot[countShoot % 10].x = flight.x;
+                flightShoot[countShoot % 10].y = flight.y;
+                countShoot++;
             }
         }
 
@@ -124,18 +134,23 @@ function draw() {
             }
         }
 
-        item.itemListener(flight.x, flight.y);
+        /* 비행기와 아이템 상호작용 */
+        switch (item.itemListener(flight.x, flight.y)) {
+            case ITEM_SPEED_UP:
+                flight.speed = 5;
+                break;
+            case ITEM_DAMAGE_UP:
+                break;
+            case ITEM_BULLET_STOP:
+                break;
+        }
+
+        /* 아이템 출력 및 아이템 효과 시간 측정 리스너 */
         item.displayPlayerItem();
+        flight.checkItemEffectListener();
 
         /* delay 감소 */
         flightShootDelayCount--;
         hitDelay--;
     }
 }
-
-function shootPlayerBullet() {
-    flightShoot[countShoot % 10].x = flight.x;
-    flightShoot[countShoot % 10].y = flight.y;
-    countShoot++;
-}
-
