@@ -2,7 +2,6 @@
 let flightShootDelayCount = 0;
 let flightBombDelayCount = 0;
 let countShoot = 0;
-let hitDelay = 0;
 let flight;
 let flightShoot = [];
 const PLAYER_SHOOT_DELAY = 30;
@@ -82,7 +81,6 @@ function draw() {
         birdBoss = new BirdBoss(0,-200, 0, 10 );
         enemy = new EnemyShooter(0, -200, 1, 10);
         score = 0;
-        hitDelay = 0;
         flightShootDelay = 0;
 
         for (let i = 0; i < 200; i++) {
@@ -145,6 +143,7 @@ function draw() {
         if (enemy.state != 0) {
             enemy.behavior(flight.x, flight.y);
             enemy.display();
+            flight.flightHitBox(enemy, 20, 60);
             if(flightBombDelayCount < 0) {
                 for (let j = 0; j < 200; j++) {
                     if (enemyBulletStop == false) {
@@ -152,10 +151,11 @@ function draw() {
                         enemyBullet[j].movePerTime(enemy.x, enemy.y);
                     }
                     enemyBullet[j].display();
-                    flight.flightHitBox(enemyBullet[j]);
+                    flight.flightHitBox(enemyBullet[j], 4, 60);
                 }
                 if (enemyBulletStop == false) {
                     enemyMissile.movePerTime(enemy.x, enemy.y, flight.x, flight.y);
+                    flight.flightHitBox(enemyMissile, 4, 60);
                 }
                 enemyMissile.display();
             }
@@ -163,6 +163,7 @@ function draw() {
         if (birdBoss.state != 0){
             birdBoss.behavior(flight.x, flight.y);
             birdBoss.display();
+            flight.flightHitBox(birdBoss, 20, 60);
         }
         /* 비행기 */
         if(flight.isFlightDead()){
@@ -198,7 +199,7 @@ function draw() {
         /* delay 감소 */
         flightShootDelayCount--;
         flightBombDelayCount--;
-        hitDelay--;
+        flight.hitDelay--;
     }
 }
 
