@@ -12,7 +12,7 @@ class FlightShoot {
 
     display() {
         push();
-        translate(this.x, this.y, 200);
+        translate(this.x, this.y, 100);
         fill(0, 255, 0);
         box(2);
         pop();

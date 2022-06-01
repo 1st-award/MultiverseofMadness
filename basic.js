@@ -2,13 +2,14 @@
 let flightShootDelayCount = 0;
 let flightBombDelayCount = 0;
 let countShoot = 0;
-let hitDelay = 0;
 let flight;
 let flightShoot = [];
 const PLAYER_SHOOT_DELAY = 30;
 // Enemy
 let enemy;
+let birdBoss;
 let enemyBullet = [];
+let enemyMissile;
 //Background
 let cloude1 =[];
 let cloude2 =[];
@@ -45,7 +46,6 @@ function setup() {
     noStroke();
 
     flight = new Flight();
-    enemy = new EnemyShooter();
 
     let itemVector = createVector(4, 3);
     item = new PlayerItem(itemVector, 255);
@@ -57,10 +57,13 @@ function setup() {
     for (let i = 0; i < 200; i++) {
         enemyBullet[i] = new EnemyBullet();
     }
-    //비행기 보스 배경 
+
+    enemyMissile = new EnemyMissile();
+
+    //비행기 보스 배경
     for(let i=0;i<10;i++){
         cloude1[i] = new Background_Cloude1();
-}
+    }
     for(let i=0;i<10;i++){
         cloude2[i] = new Background_Cloude2();
     }
@@ -74,15 +77,10 @@ function draw() {
     clear();
     if (keyCode === ENTER) {
         mode = MODE_IN_GAME;
-        flight.life = 5;
-        flight.x = 0;
-        flight.y = 0;
-        enemy.life = 10;
-        enemy.state = ENEMY_SURVIVE;
+        flight = new Flight();
+        birdBoss = new BirdBoss(0,-200, 0, 10 );
+        enemy = new EnemyShooter(0, -200, 1, 10);
         score = 0;
-        enemy.x = 0;
-        enemy.y = -180;
-        hitDelay = 0;
         flightShootDelay = 0;
 
         for (let i = 0; i < 200; i++) {
@@ -115,10 +113,10 @@ function draw() {
     if (mode == MODE_IN_GAME) {
         score++;
         background(80, 188, 223);
-        
+
         //배경 이미지 불러오기
         image(skyeimg,-300,-300);
-        
+
         //비행기 보스 배경
     for(let i=0;i<10;i++){
     cloude1[i].display();
@@ -143,19 +141,30 @@ function draw() {
 
         /* 적이 살아 있을 시 */
         if (enemy.state != 0) {
+            enemy.behavior(flight.x, flight.y);
+            enemy.display();
+            flight.flightHitBox(enemy, 20, 60);
             if(flightBombDelayCount < 0) {
                 for (let j = 0; j < 200; j++) {
                     if (enemyBulletStop == false) {
                         enemyBullet[j].delay = j;
-                        enemyBullet[j].movePerTime();
+                        enemyBullet[j].movePerTime(enemy.x, enemy.y);
                     }
                     enemyBullet[j].display();
-                    flight.flightHitBox(enemyBullet[j]);
+                    flight.flightHitBox(enemyBullet[j], 4, 60);
                 }
+                if (enemyBulletStop == false) {
+                    enemyMissile.movePerTime(enemy.x, enemy.y, flight.x, flight.y);
+                    flight.flightHitBox(enemyMissile, 4, 60);
+                }
+                enemyMissile.display();
             }
-            enemy.display();
         }
-
+        if (birdBoss.state != 0){
+            birdBoss.behavior(flight.x, flight.y);
+            birdBoss.display();
+            flight.flightHitBox(birdBoss, 20, 60);
+        }
         /* 비행기 */
         if(flight.isFlightDead()){
             mode = MODE_GAME_OVER;
@@ -166,10 +175,8 @@ function draw() {
         for (let i = 0; i < 10; i++) {
             flightShoot[i].move();
             flightShoot[i].display();
-            enemy.enemyHitBox(flightShoot[i], flight.damage);
-            if(enemy.isEnemyDead() == true){
-                mode = MODE_GAME_WIN;
-            }
+            enemy.hitBox(flightShoot[i], flight.damage);
+            birdBoss.hitBox(flightShoot[i], flight.damage);
         }
 
         /* 비행기와 아이템 상호작용 */
@@ -192,7 +199,7 @@ function draw() {
         /* delay 감소 */
         flightShootDelayCount--;
         flightBombDelayCount--;
-        hitDelay--;
+        flight.hitDelay--;
     }
 }
 

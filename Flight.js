@@ -6,11 +6,12 @@ class Flight {
         this.speed = 3;
         this.damage = 1;
         this.bombNumber = 3;
+        this.hitDelay = 0;
     }
 
     display() {
         push();
-        translate(this.x, this.y, 200);
+        translate(this.x, this.y, 100);
         this.flightShape();
         pop();
     }
@@ -21,14 +22,14 @@ class Flight {
         this.flightKeyPressed();
 
         fill(125);
-        if(hitDelay > 0) fill(255,0,0);
+        if(this.hitDelay > 0) fill(255,0,0);
         triangle(-5, 2, 0, -3, 5, 2);
         triangle(-5, 2, -2.5, 2, -3.75, 3.75);
         fill(0);
         triangle(-2.5, 2, 0, 2, -1.25, 2.75);
         triangle(0, 2, 2.5, 2, 1.25, 2.75);
         fill(125);
-        if(hitDelay > 0) fill(255,0,0);
+        if(this.hitDelay > 0) fill(255,0,0);
         triangle(2.5, 2, 5, 2, 3.75, 3.75);
         noFill();
     }
@@ -83,8 +84,8 @@ class Flight {
 
     limitFlightField() {
         /* 비행기가 움직일 수 있는 범위를 제한합니다 */
-        var limitX = 180;
-        var limitY = 130;
+        var limitX = 235;
+        var limitY = 235;
 
         if (this.x > limitX) {
             this.x = limitX;
@@ -99,10 +100,10 @@ class Flight {
         }
     }
 
-    flightHitBox(enemyBullet) {
-        if (abs(enemyBullet.x - this.x) < 4 && abs(enemyBullet.y - this.y) < 4) {
-            if (hitDelay < 0) {
-                hitDelay = 60;
+    flightHitBox(enemyBullet, range, hitDelay) {
+        if (abs(enemyBullet.x - this.x) < range && abs(enemyBullet.y - this.y) < range) {
+            if (this.hitDelay < 0) {
+                this.hitDelay = hitDelay;
                 flight.life--;
             }
         }
