@@ -1,7 +1,9 @@
+// Player
+let flightShootDelayCount = 0;
+const PLAYER_SHOOT_DELAY = 30;
 var mode;
 var score = 0;
 let hitDelay = 0;
-let flightShootDelay = 0;
 let countShoot = 0;
 let flight;
 let enemy;
@@ -16,6 +18,7 @@ const ENEMY_SURVIVE = 1;
 const MODE_GAME_WIN = 3;
 
 
+
 function preload() {
 }
 
@@ -28,6 +31,7 @@ function setup() {
 
     flight = new Flight();
     enemy = new EnemyShooter();
+    item = new PlayerItem();
 
     for (let i = 0; i < 10; i++) {
         flightShoot[i] = new FlightShoot();
@@ -41,7 +45,6 @@ function setup() {
 
 function draw() {
     clear();
-
     if (keyCode === ENTER) {
         mode = MODE_IN_GAME;
         flight.life = 5;
@@ -88,11 +91,9 @@ function draw() {
 
         /* 스페이스 바를 누를 시 총알이 발사 */
         if (keyIsDown(SPACEBAR)) {
-            if (flightShootDelay <= 0) {
-                flightShootDelay = 30;
-                flightShoot[countShoot % 10].x = flight.x;
-                flightShoot[countShoot % 10].y = flight.y;
-                countShoot++;
+            if (flightShootDelayCount <= 0) {
+                flightShootDelayCount = PLAYER_SHOOT_DELAY;
+                shootPlayerBullet();
             }
         }
 
@@ -123,10 +124,18 @@ function draw() {
             }
         }
 
+        item.itemListener(flight.x, flight.y);
+        item.displayPlayerItem();
+
         /* delay 감소 */
-        flightShootDelay--;
+        flightShootDelayCount--;
         hitDelay--;
     }
 }
 
+function shootPlayerBullet() {
+    flightShoot[countShoot % 10].x = flight.x;
+    flightShoot[countShoot % 10].y = flight.y;
+    countShoot++;
+}
 
