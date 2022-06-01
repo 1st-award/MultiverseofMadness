@@ -5,6 +5,7 @@ class Flight {
         this.y = 0;
         this.speed = 3;
         this.damage = 1;
+        this.bombNumber = 3;
     }
 
     display() {
@@ -52,6 +53,28 @@ class Flight {
         if (keyIsDown(RIGHT_ARROW)) {
             rotateY(PI / 3);
             this.x += this.speed;
+        }
+
+        /* 스페이스 바를 누를 시 총알이 발사 */
+        if (keyIsDown(SPACEBAR)) {
+            if (flightShootDelayCount <= 0) {
+                flightShootDelayCount = PLAYER_SHOOT_DELAY;
+                flightShoot[countShoot % 10].x = flight.x;
+                flightShoot[countShoot % 10].y = flight.y;
+                countShoot++;
+            }
+        }
+
+        /* 폭탄 사용 시 적의 총알 사라짐 */
+        if (keyIsDown(70)) {
+            if(flightBombDelayCount <= 0 && this.bombNumber > 0) {
+                this.bombNumber -= 1;
+                flightBombDelayCount = 180;
+                for (let i = 0; i < 200; i++) {
+                    enemyBullet[i].x = -500;
+                    enemyBullet[i].y = -500;
+                }
+            }
         }
 
         this.limitFlightField();

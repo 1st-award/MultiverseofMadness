@@ -100,25 +100,6 @@ function draw() {
         score++;
         background(80, 188, 223);
 
-        /* 스페이스 바를 누를 시 총알이 발사 */
-        if (keyIsDown(SPACEBAR)) {
-            if (flightShootDelayCount <= 0) {
-                flightShootDelayCount = PLAYER_SHOOT_DELAY;
-                flightShoot[countShoot % 10].x = flight.x;
-                flightShoot[countShoot % 10].y = flight.y;
-                countShoot++;
-            }
-        }
-
-        if (keyIsDown(70)) {
-            if(flightBombDelayCount <= 0) {
-                flightBombDelayCount = 180;
-                for (let i = 0; i < 200; i++) {
-                    enemyBullet[i] = new EnemyBullet();
-                }
-            }
-        }
-
         /* 적이 살아 있을 시 */
         if (enemy.state != 0) {
             if(flightBombDelayCount < 0) {
