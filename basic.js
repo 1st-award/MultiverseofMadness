@@ -10,6 +10,7 @@ const PLAYER_SHOOT_DELAY = 30;
 let enemy;
 let birdBoss;
 let enemyBullet = [];
+let enemyMissile;
 // Item
 let countItemEffectTime = -1;
 let enemyBulletStop = false;
@@ -40,8 +41,6 @@ function setup() {
     noStroke();
 
     flight = new Flight();
-    enemy = new EnemyShooter(0, -200, 0, 10);
-    birdBoss = new BirdBoss(0,-200, 1, 10 );
 
     let itemVector = createVector(4, 3);
     item = new PlayerItem(itemVector, 255);
@@ -53,6 +52,8 @@ function setup() {
     for (let i = 0; i < 200; i++) {
         enemyBullet[i] = new EnemyBullet();
     }
+
+    enemyMissile = new EnemyMissile();
 }
 
 
@@ -60,10 +61,9 @@ function draw() {
     clear();
     if (keyCode === ENTER) {
         mode = MODE_IN_GAME;
-        flight.life = 5;
-        flight.x = 0;
-        flight.y = 0;
-        birdBoss = new BirdBoss(0,-200, 1, 10 );
+        flight = new Flight();
+        birdBoss = new BirdBoss(0,-200, 0, 10 );
+        enemy = new EnemyShooter(0, -200, 1, 10);
         score = 0;
         hitDelay = 0;
         flightShootDelay = 0;
@@ -72,6 +72,7 @@ function draw() {
             enemyBullet[i].x = 10000;
             enemyBullet[i].y = 0;
         }
+
 
         for (let i = 0; i < 10; i++) {
             flightShoot[i].x = 10000;
@@ -101,17 +102,22 @@ function draw() {
 
         /* 적이 살아 있을 시 */
         if (enemy.state != 0) {
+            enemy.behavior(flight.x, flight.y);
+            enemy.display();
             if(flightBombDelayCount < 0) {
                 for (let j = 0; j < 200; j++) {
                     if (enemyBulletStop == false) {
                         enemyBullet[j].delay = j;
-                        enemyBullet[j].movePerTime();
+                        enemyBullet[j].movePerTime(enemy.x, enemy.y);
                     }
                     enemyBullet[j].display();
                     flight.flightHitBox(enemyBullet[j]);
                 }
+                if (enemyBulletStop == false) {
+                    enemyMissile.movePerTime(enemy.x, enemy.y, flight.x, flight.y);
+                }
+                enemyMissile.display();
             }
-            enemy.display();
         }
         if (birdBoss.state != 0){
             birdBoss.behavior(flight.x, flight.y);

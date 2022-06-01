@@ -13,13 +13,9 @@ class EnemyBullet {
 
 
     movePerTime(bossPosX, bossPosY) {
-        if (this.time > this.delay) {
-            if(this.axisX != 0 || this.axisY != 0) {
-                this.move();
-            }
-        }
+        this.move();
         if (this.time > 400 + this.delay) {
-            this.resetSetting();
+            this.resetSetting(bossPosX, bossPosY);
         }
         this.time++;
     }
@@ -29,13 +25,14 @@ class EnemyBullet {
         this.y += this.axisY / this.correctionValue;
     }
 
-    resetSetting() {
-        this.x = 0;
-        this.y = -170;
+    resetSetting(bossPosX, bossPosY) {
+        this.x = bossPosX;
+        this.y = bossPosY;
+        this.time = 0;
         this.axisX = random(-50, 50);
         this.axisY = random(0, 100);
         this.correctionValue = sqrt(sq(this.axisX) + sq(this.axisY));
-        this.time = 0;
+        if(this.axisX == 0 && this.axisY == 0) this.resetSetting();
     }
 
     display() {
