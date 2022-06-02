@@ -30,7 +30,6 @@ class EnemyMissile extends EnemyBullet{
             push();
             fill(0,0,255);
             if (this.time % 20 > 9 ) fill(255,0,0);
-            print(this.time);
             translate(0,0,100);
             rect(this.tempX-5, this.tempY-5, 10, 10);
             pop();
