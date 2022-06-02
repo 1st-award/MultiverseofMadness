@@ -1,11 +1,12 @@
 class Boss{
-    constructor(posX, posY, state, img) {
+    constructor(posX, posY, state, attackDelay, img1, img2) {
         this.x = posX;
         this.y = posY;
         this.state = state;
-        this.img = img;
+        this.img1 = img1;
+        this.img2 = img2;
         this.life = 11;
-        this.attackDelay = 200;
+        this.attackDelay = attackDelay;
         this.speed = 2;
         this.axisX = random(-50, 50);
         this.axisY = random(-50, 50);
@@ -30,16 +31,16 @@ class Boss{
     }
 
     moveAxisLimit(){
-        if(this.x > 235){
+        if(this.x > 230){
             this.axisX = -abs(this.axisX);
         }
-        if(this.x < -235){
+        if(this.x < -230){
             this.axisX = abs(this.axisX);
         }
-        if(this.y < -235){
+        if(this.y < -230){
             this.axisY = abs(this.axisY)
         }
-        if(this.y > -100){
+        if(this.y > -105){
             this.axisY = -abs(this.axisY)
         }
     }
