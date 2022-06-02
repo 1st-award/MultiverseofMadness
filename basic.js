@@ -28,6 +28,7 @@ const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
 const MODE_GAME_OVER = 2;
+const MODE_SCORE_BOARD = 3;
 const ENEMY_DIE = 0;
 const ENEMY_SURVIVE = 1;
 const MODE_GAME_WIN = 3;
@@ -47,6 +48,13 @@ let titleState = 0;
 // Boss
 let helicopterImage;
 let helicopterPropellerImage;
+// Font
+let font;
+// ScoreBoard
+let refreshScoreBoard = false;
+let rankingList = [];
+let skipRankingCount = 0;
+let nextRankingPrintCount = 0;
 
 function preload() {
   skyeimg = loadImage('resources/skye.png');
@@ -65,6 +73,9 @@ function preload() {
   birdPoseBImage = loadImage('resources/bird2.png');
   helicopterImage = loadImage('resources/helicopter.png');
   helicopterPropellerImage = loadImage('resources/helicopterpropeller.png');
+
+  // Font
+  font = loadFont('resources/DungGeunMo.ttf');
 }
 
 
@@ -124,6 +135,11 @@ function draw() {
     /* 게임 승리 */
     if (mode == MODE_GAME_WIN) {
         background(255);
+    }
+
+    if (mode == MODE_SCORE_BOARD) {
+        image(titleBackground, -300, -300, 600, 600);
+        drawScoreBoard();
     }
 
     /* 인 게임 */
@@ -291,4 +307,31 @@ function resetting(){
         flightShoot[i].x = 10000;
         flightShoot[i].y = 0;
     }
+}
+
+function drawScoreBoard() {
+    textFont(font);
+    textSize(50);
+    text("이름", -250, -200);
+    text("점수", -45, -200);
+    text("시간", 150, -200);
+
+    if (nextRankingPrintCount > 10 * 60) {
+        skipRankingCount += 10;
+        nextRankingPrintCount = 0;
+        refreshScoreBoard = false;
+    }
+
+    if (refreshScoreBoard != true) {
+        refreshScoreBoard = true;
+        getRankingBoard(skipRankingCount);
+    }
+
+    for(let i = 0; i < rankingList.length; ++i) {
+        text(rankingList[i].nickname, -250, i*45 -140);
+        text(rankingList[i].score, -50, i*45 -140);
+        text(rankingList[i].time,  150, i*45 -140);
+    }
+
+    nextRankingPrintCount++;
 }
