@@ -18,4 +18,5 @@ function postRanking(nickname, score, time) {
         "score": score,
         "time": time
     };
+    httpPost("https://211.114.29.234:8000/score_board/", 'json', rankingObject);
 }
