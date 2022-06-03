@@ -1,5 +1,8 @@
 function getRankingBoard(skipRankingNumber) {
-    loadJSON("https://211.114.29.234:8000/score_board/?skip=" + skipRankingNumber + "&limit=10", getData);
+    httpGet("https://211.114.29.234:8000/score_board/?skip=" + skipRankingNumber + "&limit=10", "json", getData, function() {
+        rankingList = [{"nickname": "Server", "score": "is", "time": "down"},
+                        {"nickname": "Please", "score": "try", "time": "latter"}];
+    });
 }
 
 function getData(data) {
@@ -18,5 +21,5 @@ function postRanking(nickname, score, time) {
         "score": score,
         "time": time
     };
-    httpPost("https://211.114.29.234:8000/score_board/", 'json', rankingObject);
+    httpPost("https://211.114.29.234:8000/score_board/", 'json', rankingObject, function () {connectionStatus = true;}, function () {connectionStatus =  false;});
 }
