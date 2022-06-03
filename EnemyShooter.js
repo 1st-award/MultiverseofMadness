@@ -1,6 +1,6 @@
 class EnemyShooter extends Boss {
-    constructor(posX, posY, state, attackDelay, img1, img2) {
-        super(posX, posY, state, attackDelay, img1, img2);
+    constructor(posX, posY, state, maxLife, attackDelay, img1, img2) {
+        super(posX, posY, state, maxLife, attackDelay, img1, img2);
     }
 
     behavior(){
@@ -18,7 +18,7 @@ class EnemyShooter extends Boss {
 
     display() {
         push();
-        translate(this.x, this.y, 100);
+        translate(this.x, this.y);
         this.lifePerColor();
         rotateZ(PI);
         image(this.img1,-40,-40,80,80);

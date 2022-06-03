@@ -11,7 +11,7 @@ class Flight {
 
     display() {
         push();
-        translate(this.x, this.y, 100);
+        translate(this.x, this.y);
         this.flightShape();
         pop();
     }
@@ -84,8 +84,8 @@ class Flight {
 
     limitFlightField() {
         /* 비행기가 움직일 수 있는 범위를 제한합니다 */
-        var limitX = 235;
-        var limitY = 235;
+        var limitX = 295;
+        var limitY = 295;
 
         if (this.x > limitX) {
             this.x = limitX;
@@ -113,5 +113,19 @@ class Flight {
         if(this.life < 0){
             return true;
         }
+    }
+
+    displayStat(posX, posY, width, height, value, imageA){
+        image(imageA, posX, posY, height, height);
+        push();
+        fill(255,0,0);
+        rect(posX+height,posY,value*(width-height)/5,height);
+        noFill();
+        stroke(0);
+        strokeWeight(4);
+        for (let i = 0; i < 5; i++){
+            rect(posX+height+i*(width-height)/5,posY,(width-height)/5,height);
+        }
+        pop();
     }
 }

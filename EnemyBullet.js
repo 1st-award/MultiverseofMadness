@@ -36,7 +36,7 @@ class EnemyBullet {
 
     display() {
         push();
-        translate(this.x, this.y, 100);
+        translate(this.x, this.y);
         fill(255, 255, 0);
         sphere(4);
         pop();
