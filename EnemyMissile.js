@@ -16,7 +16,6 @@ class EnemyMissile extends EnemyBullet{
         if (this.time < 130 && this.time >= 100 ){
             this.move();
             push();
-            translate(0,0,100);
             fill(230,0,0);
             rect(this.tempX-5, this.tempY-5, 10, 10);
             pop();
@@ -24,13 +23,12 @@ class EnemyMissile extends EnemyBullet{
         if(this.time == 99){
             this.axisSetting(bossPosX, bossPosY, playerPosX, playerPosY);
         }
-        if (this.time > 10 && this.time < 100){
+        if (this.time > 0 && this.time < 100){
             this.resetSetting(bossPosX, bossPosY);
             this.tempSetting(playerPosX, playerPosY)
             push();
             fill(0,0,255);
             if (this.time % 20 > 9 ) fill(255,0,0);
-            translate(0,0,100);
             rect(this.tempX-5, this.tempY-5, 10, 10);
             pop();
         }
@@ -54,9 +52,9 @@ class EnemyMissile extends EnemyBullet{
 
     display(){
         push();
-        translate(this.x, this.y, 100);
-        fill(255, 0, 0);
-        sphere(4);
+        translate(this.x, this.y);
+        fill(0);
+        rect(-0.5,-4,1,8);
         pop();
     }
 

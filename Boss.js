@@ -1,11 +1,12 @@
 class Boss{
-    constructor(posX, posY, state, attackDelay, img1, img2) {
+    constructor(posX, posY, state, maxLife, attackDelay, img1, img2) {
         this.x = posX;
         this.y = posY;
         this.state = state;
         this.img1 = img1;
         this.img2 = img2;
-        this.life = 11;
+        this.maxLife = maxLife;
+        this.life = maxLife;
         this.attackDelay = attackDelay;
         this.speed = 2;
         this.axisX = random(-50, 50);
@@ -51,23 +52,20 @@ class Boss{
     }
 
     lifePerColor() {
-        if (this.life == 1) {
-            fill(0);
-        }
-        if (this.life <= 3 && this.life > 1) {
-            if (frameCount % 2 == 1) {
+        if (this.life == 0) {
+            if (frameCount % 10 > 4) {
                 fill(127);
             }
-            if (frameCount % 2 == 0) {
+            else{
                 fill(255);
             }
         }
 
-        if (this.life < 10 && this.life > 3) {
+        if (this.life <= this.maxLife && this.life > 0) {
             fill(255, 0, 0);
         }
-        if (this.life > 10) {
-            fill(255);
+        if (this.life > this.maxLife/2) {
+            fill(0,0,255);
         }
     }
 
@@ -84,5 +82,19 @@ class Boss{
         if (this.life < 0) {
             this.state = ENEMY_DIE;
         }
+    }
+
+    displayBossHP(posX,posY,width,height){
+        image(this.img1, posX, posY, height, height);
+        push();
+        this.lifePerColor()
+        rect(posX+height,posY,(this.life+1)*(width-height)/(this.maxLife+1),height);
+        noFill();
+        stroke(0);
+        strokeWeight(4);
+        for (let i = 0; i < this.maxLife+1; i++){
+            rect(posX+height+i*(width-height)/(this.maxLife+1),posY,(width-height)/(this.maxLife+1),height);
+        }
+        pop();
     }
 }
