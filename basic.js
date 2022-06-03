@@ -9,7 +9,8 @@ const PLAYER_SHOOT_DELAY = 30;
 let enemy;
 let birdBoss = [];
 let enemyBullet = [];
-let enemyMissile;
+let enemyMissile = [];
+let bossSun;
 //Background
 let cloude1 =[];
 let cloude2 =[];
@@ -73,6 +74,8 @@ function preload() {
   birdPoseBImage = loadImage('resources/bird2.png');
   helicopterImage = loadImage('resources/helicopter.png');
   helicopterPropellerImage = loadImage('resources/helicopterpropeller.png');
+  sunPoseAImage = loadImage('resources/sun1.png');
+  sunPoseBImage = loadImage('resources/sun2.png');
 
   // Font
   font = loadFont('resources/DungGeunMo.ttf');
@@ -173,32 +176,43 @@ function draw() {
         //배경 끝
 
         /* 적이 살아 있을 시 */
-        if (enemy.state != 0) {
-            enemy.behavior(flight.x, flight.y);
+        if (enemy.state == ENEMY_SURVIVE) {
+            enemy.behavior();
             enemy.display();
             flight.flightHitBox(enemy, 20, 60);
             if(flightBombDelayCount < 0) {
-                for (let j = 0; j < 200; j++) {
+                for (let j = 0; j < 200; j += 2) {
                     if (enemyBulletStop == false) {
                         enemyBullet[j].delay = j;
-                        enemyBullet[j].movePerTime(enemy.x, enemy.y);
+                        enemyBullet[j].movePerTime(enemy.x-12, enemy.y+23, 2);
+                        enemyBullet[j+1].delay = j+1;
+                        enemyBullet[j+1].movePerTime(enemy.x+17, enemy.y+23, 2);
                     }
                     enemyBullet[j].display();
+                    enemyBullet[j+1].display();
                     flight.flightHitBox(enemyBullet[j], 4, 60);
                 }
                 if (enemyBulletStop == false) {
-                    enemyMissile.movePerTime(enemy.x, enemy.y, flight.x, flight.y);
-                    flight.flightHitBox(enemyMissile, 4, 60);
+                    enemyMissile[0].movePerTime(enemy.x-7, enemy.y+25, flight.x, flight.y);
+                    flight.flightHitBox(enemyMissile[0], 4, 60);
+                    enemyMissile[1].movePerTime(enemy.x+11, enemy.y+25, flight.x, flight.y);
+                    flight.flightHitBox(enemyMissile[1], 4, 60);
                 }
-                enemyMissile.display();
+                enemyMissile[0].display();
+                enemyMissile[1].display();
             }
         }
         for(let i=0; i<3; i++){
-            if (birdBoss[i].state != 0) {
+            if (birdBoss[i].state == ENEMY_SURVIVE) {
                 birdBoss[i].behavior(flight.x, flight.y);
                 birdBoss[i].display(flight.x, flight.y);
                 flight.flightHitBox(birdBoss[i], 20, 60);
             }
+        }
+        if(bossSun.state == ENEMY_SURVIVE ){
+            bossSun.behavior();
+            bossSun.display();
+            flight.flightHitBox(bossSun, 20, 60);
         }
 
         /* 비행기 */
@@ -291,10 +305,13 @@ function resetting(){
     mode = MODE_IN_GAME;
     flight = new Flight();
     for(let i = 0; i<3; i++) {
-        birdBoss[i] = new BirdBoss(0, -200, 1, 80+ 30*i, birdPoseAImage, birdPoseBImage);
+        birdBoss[i] = new BirdBoss(0, -200, 0, 80+ 30*i, birdPoseAImage, birdPoseBImage);
     }
-    enemy = new EnemyShooter(0, -200, 0, helicopterImage, helicopterPropellerImage);
-    enemyMissile = new EnemyMissile();
+    enemy = new EnemyShooter(0, -200, 1, 100, helicopterImage, helicopterPropellerImage);
+    bossSun  = new BossSun(0, -200, 0, 100, sunPoseAImage, sunPoseBImage)
+    for (let i = 0; i<2; i++) {
+        enemyMissile[i] = new EnemyMissile();
+    }
     score = 0;
     flightShootDelay = 0;
 

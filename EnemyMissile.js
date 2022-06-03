@@ -24,7 +24,7 @@ class EnemyMissile extends EnemyBullet{
         if(this.time == 99){
             this.axisSetting(bossPosX, bossPosY, playerPosX, playerPosY);
         }
-        if (this.time > 10 && this.time < 100){
+        if (this.time > 0 && this.time < 100){
             this.resetSetting(bossPosX, bossPosY);
             this.tempSetting(playerPosX, playerPosY)
             push();
@@ -55,8 +55,8 @@ class EnemyMissile extends EnemyBullet{
     display(){
         push();
         translate(this.x, this.y, 100);
-        fill(255, 0, 0);
-        sphere(4);
+        fill(0);
+        rect(-0.5,-4,1,8);
         pop();
     }
 
