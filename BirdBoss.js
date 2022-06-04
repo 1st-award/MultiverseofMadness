@@ -17,12 +17,7 @@ class BirdBoss extends Boss{
             this.y -= this.tempY/10;
         }
         else {
-            if(this.moveDuration < 0){
-                super.moveAxisSetting();
-                this.moveDuration = 30;
-            }
-            super.move();
-            this.moveDuration--;
+            super.movepattern();
         }
         this.attackDelay--;
         super.isEnemyDead();

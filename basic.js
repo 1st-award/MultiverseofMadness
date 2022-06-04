@@ -63,6 +63,8 @@ let helicopterImage;
 let helicopterPropellerImage;
 let sunPoseAImage;
 let sunPoseBImage;
+let yellowMeteoImage;
+let redMeteoImage;
 // Font
 let font;
 // ScoreBoard
@@ -98,6 +100,8 @@ function preload() {
   helicopterPropellerImage = loadImage('resources/helicopterpropeller.png');
   sunPoseAImage = loadImage('resources/sun1.png');
   sunPoseBImage = loadImage('resources/sun2.png');
+  yellowMeteoImage = loadImage('resources/yellowmeteo.png');
+  redMeteoImage = loadImage('resources/redmeteo.png');
 
   // Font
   font = loadFont('resources/DungGeunMo.ttf');
@@ -229,10 +233,20 @@ function draw() {
         }
         if(bossSun.state == ENEMY_SURVIVE ){
             drawSpaceBackground();
-            bossSun.behavior();
+            bossSun.behavior(flight.x, flight.y);
             bossSun.display();
             flight.flightHitBox(bossSun, 20, 60);
             bossSun.displayBossHP(-300, -340, 590, 40);
+            for(let i=0; i<200; i++){
+                bossSun.patternAObject[i].display();
+                flight.flightHitBox(bossSun.patternAObject[i], 20, 60);
+            }
+            for (let i = 0; i<50; i++){
+                bossSun.patternBLeftObject[i].display();
+                bossSun.patternBRightObject[i].display();
+                flight.flightHitBox(bossSun.patternBLeftObject[i], 20, 60);
+                flight.flightHitBox(bossSun.patternBRightObject[i], 20, 60);
+            }
         }
 
         /* 비행기 */
@@ -338,7 +352,7 @@ function resetting(){
         birdBoss[i] = new BirdBoss(0, -200, 0, 5, 80+ 30*i, birdPoseAImage, birdPoseBImage);
     }
     enemy = new EnemyShooter(0, -200, 0, 20, 100, helicopterImage, helicopterPropellerImage);
-    bossSun  = new BossSun(0, -200, 1, 100, 100, sunPoseAImage, sunPoseBImage);
+    bossSun  = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
     for (let i = 0; i<2; i++) {
         enemyMissile[i] = new EnemyMissile();
     }
@@ -437,16 +451,17 @@ function drawForestBackground(){
 
 function drawSpaceBackground(){
     //썬 보스 배경
-    image(spaceimg,-350,-350, 700, 700);
+    push();
+    translate(0,0,-200);
+    image(spaceimg,-550,-550, 1100, 1100);
     for(let i =0;i<10;i++){
         space[i].display();
-        push();
         space[i].x-=5;
         space[i].y+=5;
         if(space[i].x < -300){
             space[i].x=random(300,500);
             space[i].y=random(-700,0);
         }
-        pop();
     }
+    pop();
 }

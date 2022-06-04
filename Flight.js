@@ -110,7 +110,7 @@ class Flight {
     }
 
     isFlightDead(){
-        if(this.life < 0){
+        if(this.life <= 0){
             return true;
         }
     }

@@ -11,7 +11,7 @@ class Boss{
         this.speed = 2;
         this.axisX = random(-50, 50);
         this.axisY = random(-50, 50);
-        this.correctionValue = sqrt(sq(this.axisX) + sq(this.axisY));;
+        this.correctionValue = sqrt(sq(this.axisX) + sq(this.axisY));
         this.moveDuration = 30;
         this.tempX = 0;
         this.tempY = 0;
@@ -31,6 +31,15 @@ class Boss{
         if(this.axisX == 0 && this.axisY == 0) this.moveAxisSetting();
     }
 
+    movepattern(){
+        if(this.moveDuration < 0){
+            this.moveAxisSetting();
+            this.moveDuration = 30;
+        }
+        this.move();
+        this.moveDuration--;
+    }
+
     moveAxisLimit(){
         if(this.x > 230){
             this.axisX = -abs(this.axisX);
@@ -39,10 +48,10 @@ class Boss{
             this.axisX = abs(this.axisX);
         }
         if(this.y < -230){
-            this.axisY = abs(this.axisY)
+            this.axisY = abs(this.axisY);
         }
         if(this.y > -105){
-            this.axisY = -abs(this.axisY)
+            this.axisY = -abs(this.axisY);
         }
     }
 
