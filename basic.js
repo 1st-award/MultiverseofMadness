@@ -70,6 +70,7 @@ let refreshScoreBoard = false;
 let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
+let connectionStatus;
 
 function preload() {
   skyeimg = loadImage('resources/skye.png');
