@@ -15,10 +15,16 @@ let enemyBullet = [];
 let enemyMissile = [];
 let bossSun;
 //Background
+let forest1 = [];
+let forest2 = [];
+let forestimg;
+let treeimg;
 let cloude1 =[];
 let cloude2 =[];
 let cloude3 =[];
 let skyeimg;
+let space=[];
+let spaceimg;
 // Item
 let countItemEffectTime = -1;
 let enemyBulletStop = false;
@@ -28,6 +34,7 @@ const ITEM_BULLET_STOP = 2;
 // Game
 var mode;
 var score = 0;
+var stageNum = 0;
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
@@ -51,7 +58,7 @@ let textVictoryImage;
 let titleState = 0;
 // Boss
 let birdPoseAImage;
-let birdPoseBImage
+let birdPoseBImage;
 let helicopterImage;
 let helicopterPropellerImage;
 let sunPoseAImage;
@@ -63,10 +70,12 @@ let refreshScoreBoard = false;
 let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
-let connectionStatus;
 
 function preload() {
   skyeimg = loadImage('resources/skye.png');
+  forestimg = loadImage('resources/forest.png');
+  treeimg = loadImage('resources/tree1.png');
+  spaceimg = loadImage('resources/space.png');
   titleBackground = loadImage('resources/bg.png');
   buttonEmptyImage = loadImage('resources/bt_empty.png');
   buttonQuitImage = loadImage('resources/bt_quit.png');
@@ -80,7 +89,7 @@ function preload() {
 
   playerHPImage = loadImage('resources/hp.png');
   playerDamageImage = loadImage('resources/damage.png');
-  playerBombImage = loadImage('resources/boom.png')
+  playerBombImage = loadImage('resources/boom.png');
 
   birdPoseAImage = loadImage('resources/bird1.png');
   birdPoseBImage = loadImage('resources/bird2.png');
@@ -113,6 +122,14 @@ function setup() {
         enemyBullet[i] = new EnemyBullet();
     }
 
+    //새 보스 배경
+    for(let i=0; i<65; i++){
+        forest1[i]=new Forest1(-2000 + 40*i);
+    }
+    for(let i=0; i<65; i++){
+        forest2[i]=new Forest2(-2000 + 40*i);
+    }
+
     //비행기 보스 배경
     for(let i=0;i<10;i++){
         cloude1[i] = new Background_Cloude1();
@@ -122,6 +139,11 @@ function setup() {
     }
     for(let i=0;i<10;i++){
         cloude3[i]= new Background_Cloude3();
+    }
+
+    //썬 보스 배경
+    for(let i=0;i<10;i++){
+        space[i] = new Space();
     }
 }
 
@@ -164,52 +186,28 @@ function draw() {
         score++;
         background(80, 188, 223);
 
-        //배경 이미지 불러오기
-        image(skyeimg,-300,-300);
-
-        //비행기 보스 배경
-        for(let i=0;i<10;i++){
-            cloude1[i].display();
-            cloude2[i].display();
-            cloude3[i].display();
-            push();
-            cloude1[i].y += 3;
-            if(cloude1[i].y >500){
-                cloude1[i].y = random(-400,-550);
-            }
-            cloude2[i].y += 8;
-            if(cloude2[i].y >500){
-                cloude2[i].y = random(-400,-600);
-            }
-            cloude3[i].y += 3;
-            if(cloude3[i].y > 500){
-                cloude3[i].y = random(-400,-700);
-            }
-            pop();
-        }
-        //배경 끝
-
         /* 적이 살아 있을 시 */
         if (enemy.state == ENEMY_SURVIVE) {
+            drawSkyBackground();
             enemy.behavior();
             enemy.display();
             flight.flightHitBox(enemy, 20, 60);
-            if(flightBombDelayCount < 0) {
+            if (flightBombDelayCount < 0) {
                 for (let j = 0; j < 200; j += 2) {
                     if (enemyBulletStop == false) {
                         enemyBullet[j].delay = j;
-                        enemyBullet[j].movePerTime(enemy.x-12, enemy.y+23, 2);
-                        enemyBullet[j+1].delay = j+1;
-                        enemyBullet[j+1].movePerTime(enemy.x+17, enemy.y+23, 2);
+                        enemyBullet[j].movePerTime(enemy.x - 12, enemy.y + 23, 2);
+                        enemyBullet[j + 1].delay = j + 1;
+                        enemyBullet[j + 1].movePerTime(enemy.x + 17, enemy.y + 23, 2);
                     }
                     enemyBullet[j].display();
-                    enemyBullet[j+1].display();
+                    enemyBullet[j + 1].display();
                     flight.flightHitBox(enemyBullet[j], 4, 60);
                 }
                 if (enemyBulletStop == false) {
-                    enemyMissile[0].movePerTime(enemy.x-7, enemy.y+25, flight.x, flight.y);
+                    enemyMissile[0].movePerTime(enemy.x - 7, enemy.y + 25, flight.x, flight.y);
                     flight.flightHitBox(enemyMissile[0], 4, 60);
-                    enemyMissile[1].movePerTime(enemy.x+11, enemy.y+25, flight.x, flight.y);
+                    enemyMissile[1].movePerTime(enemy.x + 11, enemy.y + 25, flight.x, flight.y);
                     flight.flightHitBox(enemyMissile[1], 4, 60);
                 }
                 enemyMissile[0].display();
@@ -217,15 +215,19 @@ function draw() {
             }
             enemy.displayBossHP(-300, -340, 590, 40);
         }
-        for(let i=0; i<3; i++){
-            if (birdBoss[i].state == ENEMY_SURVIVE) {
-                birdBoss[i].behavior(flight.x, flight.y);
-                birdBoss[i].display(flight.x, flight.y);
-                flight.flightHitBox(birdBoss[i], 20, 60);
-                birdBoss[i].displayBossHP(-300+190*i, -340, 160, 40);
+        if (birdBoss[0].state == ENEMY_SURVIVE || birdBoss[1].state == ENEMY_SURVIVE || birdBoss[2].state == ENEMY_SURVIVE){
+            drawForestBackground();
+            for (let i = 0; i < 3; i++) {
+                if (birdBoss[i].state == ENEMY_SURVIVE) {
+                    birdBoss[i].behavior(flight.x, flight.y);
+                    birdBoss[i].display(flight.x, flight.y);
+                    flight.flightHitBox(birdBoss[i], 20, 60);
+                    birdBoss[i].displayBossHP(-300 + 190 * i, -340, 160, 40);
+                }
             }
         }
         if(bossSun.state == ENEMY_SURVIVE ){
+            drawSpaceBackground();
             bossSun.behavior();
             bossSun.display();
             flight.flightHitBox(bossSun, 20, 60);
@@ -334,8 +336,8 @@ function resetting(){
     for(let i = 0; i<3; i++) {
         birdBoss[i] = new BirdBoss(0, -200, 0, 5, 80+ 30*i, birdPoseAImage, birdPoseBImage);
     }
-    enemy = new EnemyShooter(0, -200, 1, 20, 100, helicopterImage, helicopterPropellerImage);
-    bossSun  = new BossSun(0, -200, 0, 100, 100, sunPoseAImage, sunPoseBImage)
+    enemy = new EnemyShooter(0, -200, 0, 20, 100, helicopterImage, helicopterPropellerImage);
+    bossSun  = new BossSun(0, -200, 1, 100, 100, sunPoseAImage, sunPoseBImage);
     for (let i = 0; i<2; i++) {
         enemyMissile[i] = new EnemyMissile();
     }
@@ -378,4 +380,72 @@ function drawScoreBoard() {
     }
 
     nextRankingPrintCount++;
+}
+
+function drawSkyBackground(){
+    //비행기 보스 배경
+    image(skyeimg, -300, -300);
+    for(let i=0;i<10;i++){
+        cloude1[i].display();
+        cloude2[i].display();
+        cloude3[i].display();
+        push();
+        cloude1[i].y += 3;
+        if(cloude1[i].y >500){
+            cloude1[i].y = random(-400,-550);
+        }
+        cloude2[i].y += 8;
+        if(cloude2[i].y >500){
+            cloude2[i].y = random(-400,-600);
+        }
+        cloude3[i].y += 3;
+        if(cloude3[i].y > 500){
+            cloude3[i].y = random(-400,-700);
+        }
+        pop();
+    }
+    //배경 끝
+}
+
+function drawForestBackground(){
+    //새 보스 배경
+    image(forestimg,-350,-350);
+    for(let i = 0;i<65;i++){
+        forest1[i].display();
+        forest2[i].display();
+        push();
+        forest1[i].y += 5;
+        if(forest1[i].y > 700){
+            forest1[i].y = -2000;
+        }
+        forest1[i].watery+=5;
+        if(forest1[i].watery > 400){
+            forest1[i].watery = random(-400,-600);
+        }
+        forest2[i].y+=5;
+        if(forest2[i].y > 700){
+            forest2[i].y = -2000;
+        }
+        forest2[i].watery+=5;
+        if(forest2[i].watery > 400){
+            forest2[i].watery = random(-700,-900);
+        }
+        pop();
+    }
+}
+
+function drawSpaceBackground(){
+    //썬 보스 배경
+    image(spaceimg,-350,-350, 700, 700);
+    for(let i =0;i<10;i++){
+        space[i].display();
+        push();
+        space[i].x-=5;
+        space[i].y+=5;
+        if(space[i].x < -300){
+            space[i].x=random(300,500);
+            space[i].y=random(-700,0);
+        }
+        pop();
+    }
 }
