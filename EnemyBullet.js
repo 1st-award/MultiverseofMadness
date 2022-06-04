@@ -31,7 +31,6 @@ class EnemyBullet {
         this.axisX = random(-50, 50);
         this.axisY = random(50, 100);
         this.correctionValue = sqrt(sq(this.axisX) + sq(this.axisY));
-        if(this.axisX == 0 && this.axisY == 0) this.resetSetting();
     }
 
     display() {

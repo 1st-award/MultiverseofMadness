@@ -4,14 +4,7 @@ class EnemyShooter extends Boss {
     }
 
     behavior(){
-        if(this.moveDuration < 0){
-            super.moveAxisSetting();
-            this.moveDuration = 30;
-        }
-
-        super.move();
-        this.moveDuration--;
-
+        super.movepattern();
         this.attackDelay--;
         super.isEnemyDead();
     }
