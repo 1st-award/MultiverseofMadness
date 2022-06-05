@@ -22,14 +22,14 @@ class Flight {
         this.flightKeyPressed();
 
         fill(125);
-        if(this.hitDelay > 0) fill(255,0,0);
+        if (this.hitDelay > 0) fill(255, 0, 0);
         triangle(-5, 2, 0, -3, 5, 2);
         triangle(-5, 2, -2.5, 2, -3.75, 3.75);
         fill(0);
         triangle(-2.5, 2, 0, 2, -1.25, 2.75);
         triangle(0, 2, 2.5, 2, 1.25, 2.75);
         fill(125);
-        if(this.hitDelay > 0) fill(255,0,0);
+        if (this.hitDelay > 0) fill(255, 0, 0);
         triangle(2.5, 2, 5, 2, 3.75, 3.75);
         noFill();
     }
@@ -68,7 +68,7 @@ class Flight {
 
         /* 폭탄 사용 시 적의 총알 사라짐 */
         if (keyIsDown(70)) {
-            if(flightBombDelayCount <= 0 && this.bombNumber > 0) {
+            if (flightBombDelayCount <= 0 && this.bombNumber > 0) {
                 this.bombNumber -= 1;
                 flightBombDelayCount = 180;
                 for (let i = 0; i < 200; i++) {
@@ -109,22 +109,22 @@ class Flight {
         }
     }
 
-    isFlightDead(){
-        if(this.life <= 0){
+    isFlightDead() {
+        if (this.life <= 0) {
             return true;
         }
     }
 
-    displayStat(posX, posY, width, height, value, imageA){
+    displayStat(posX, posY, width, height, value, imageA) {
         image(imageA, posX, posY, height, height);
         push();
-        fill(255,0,0);
-        rect(posX+height,posY,value*(width-height)/5,height);
+        fill(255, 0, 0);
+        rect(posX + height, posY, value * (width - height) / 5, height);
         noFill();
         stroke(0);
         strokeWeight(4);
-        for (let i = 0; i < 5; i++){
-            rect(posX+height+i*(width-height)/5,posY,(width-height)/5,height);
+        for (let i = 0; i < 5; i++) {
+            rect(posX + height + i * (width - height) / 5, posY, (width - height) / 5, height);
         }
         pop();
     }

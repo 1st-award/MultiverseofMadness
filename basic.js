@@ -23,11 +23,11 @@ let forest1 = [];
 let forest2 = [];
 let forestimg;
 let treeimg;
-let cloude1 =[];
-let cloude2 =[];
-let cloude3 =[];
+let cloude1 = [];
+let cloude2 = [];
+let cloude3 = [];
 let skyeimg;
-let space=[];
+let space = [];
 let spaceimg;
 // Item
 let countItemEffectTime = -1;
@@ -83,36 +83,36 @@ let nickname = [];
 let nicknameTemp = [];
 
 function preload() {
-  skyeimg = loadImage('resources/skye.png');
-  forestimg = loadImage('resources/forest.png');
-  treeimg = loadImage('resources/tree1.png');
-  spaceimg = loadImage('resources/space.png');
-  titleBackground = loadImage('resources/bg.png');
-  buttonEmptyImage = loadImage('resources/bt_empty.png');
-  buttonQuitImage = loadImage('resources/bt_quit.png');
-  buttonStartImage = loadImage('resources/bt_start.png');
-  buttonTitleImage = loadImage('resources/bt_totitle.png');
-  textGameOverImage = loadImage('resources/tex_gameover.png');
-  textScoreImage = loadImage('resources/tex_score.png');
-  textTitleImage = loadImage('resources/tex_title.png');
-  textUserNameImage = loadImage('resources/tex_username.png');
-  textVictoryImage = loadImage('resources/tex_victory.png');
+    skyeimg = loadImage('resources/skye.png');
+    forestimg = loadImage('resources/forest.png');
+    treeimg = loadImage('resources/tree1.png');
+    spaceimg = loadImage('resources/space.png');
+    titleBackground = loadImage('resources/bg.png');
+    buttonEmptyImage = loadImage('resources/bt_empty.png');
+    buttonQuitImage = loadImage('resources/bt_quit.png');
+    buttonStartImage = loadImage('resources/bt_start.png');
+    buttonTitleImage = loadImage('resources/bt_totitle.png');
+    textGameOverImage = loadImage('resources/tex_gameover.png');
+    textScoreImage = loadImage('resources/tex_score.png');
+    textTitleImage = loadImage('resources/tex_title.png');
+    textUserNameImage = loadImage('resources/tex_username.png');
+    textVictoryImage = loadImage('resources/tex_victory.png');
 
-  playerHPImage = loadImage('resources/hp.png');
-  playerDamageImage = loadImage('resources/damage.png');
-  playerBombImage = loadImage('resources/boom.png');
+    playerHPImage = loadImage('resources/hp.png');
+    playerDamageImage = loadImage('resources/damage.png');
+    playerBombImage = loadImage('resources/boom.png');
 
-  birdPoseAImage = loadImage('resources/bird1.png');
-  birdPoseBImage = loadImage('resources/bird2.png');
-  helicopterImage = loadImage('resources/helicopter.png');
-  helicopterPropellerImage = loadImage('resources/helicopterpropeller.png');
-  sunPoseAImage = loadImage('resources/sun1.png');
-  sunPoseBImage = loadImage('resources/sun2.png');
-  yellowMeteoImage = loadImage('resources/yellowmeteo.png');
-  redMeteoImage = loadImage('resources/redmeteo.png');
+    birdPoseAImage = loadImage('resources/bird1.png');
+    birdPoseBImage = loadImage('resources/bird2.png');
+    helicopterImage = loadImage('resources/helicopter.png');
+    helicopterPropellerImage = loadImage('resources/helicopterpropeller.png');
+    sunPoseAImage = loadImage('resources/sun1.png');
+    sunPoseBImage = loadImage('resources/sun2.png');
+    yellowMeteoImage = loadImage('resources/yellowmeteo.png');
+    redMeteoImage = loadImage('resources/redmeteo.png');
 
-  // Font
-  font = loadFont('resources/DungGeunMo.ttf');
+    // Font
+    font = loadFont('resources/DungGeunMo.ttf');
 }
 
 
@@ -136,26 +136,26 @@ function setup() {
     }
 
     //새 보스 배경
-    for(let i=0; i<65; i++){
-        forest1[i]=new Forest1(-2000 + 40*i);
+    for (let i = 0; i < 65; i++) {
+        forest1[i] = new Forest1(-2000 + 40 * i);
     }
-    for(let i=0; i<65; i++){
-        forest2[i]=new Forest2(-2000 + 40*i);
+    for (let i = 0; i < 65; i++) {
+        forest2[i] = new Forest2(-2000 + 40 * i);
     }
 
     //비행기 보스 배경
-    for(let i=0;i<10;i++){
+    for (let i = 0; i < 10; i++) {
         cloude1[i] = new Background_Cloude1();
     }
-    for(let i=0;i<10;i++){
+    for (let i = 0; i < 10; i++) {
         cloude2[i] = new Background_Cloude2();
     }
-    for(let i=0;i<10;i++){
-        cloude3[i]= new Background_Cloude3();
+    for (let i = 0; i < 10; i++) {
+        cloude3[i] = new Background_Cloude3();
     }
 
     //썬 보스 배경
-    for(let i=0;i<10;i++){
+    for (let i = 0; i < 10; i++) {
         space[i] = new Space();
     }
 }
@@ -163,29 +163,29 @@ function setup() {
 
 function draw() {
     clear();
-    translate(0,0,100);
+    translate(0, 0, 100);
     /* 닉네임 입력 */
-    if (mode == MODE_INPUT_PLAYERNAME){
+    if (mode == MODE_INPUT_PLAYERNAME) {
         textFont(font);
         background(255);
         fill(0);
         textSize(40);
-        text('input nickname', -100,-200);
-        text(nickname, -200,-100);
+        text('input nickname', -100, -200);
+        text(nickname, -200, -100);
     }
     /* 타이틀 */
     if (mode == MODE_GAME_TITLE) {
-        image(titleBackground,-width/2,-height/2,width,height);
+        image(titleBackground, -width / 2, -height / 2, width, height);
         push();
         fill(255, 0, 0);
-        if(titleState == 0) rect(-100,50,200,50);
-        if(titleState == 1) rect(-100,120,200,50);
-        if(titleState == 2) rect(-100,190,200,50);
+        if (titleState == 0) rect(-100, 50, 200, 50);
+        if (titleState == 1) rect(-100, 120, 200, 50);
+        if (titleState == 2) rect(-100, 190, 200, 50);
         pop();
-        image(textTitleImage,-100,-200,200,200);
-        image(buttonStartImage,-100,50,200,50);
-        image(buttonEmptyImage,-100,120,200,50);
-        image(buttonQuitImage,-100,190,200,50);
+        image(textTitleImage, -100, -200, 200, 200);
+        image(buttonStartImage, -100, 50, 200, 50);
+        image(buttonEmptyImage, -100, 120, 200, 50);
+        image(buttonQuitImage, -100, 190, 200, 50);
         score = 0;
         time = 0;
         bossLevel = 0;
@@ -194,13 +194,13 @@ function draw() {
     /* 게임 오버 */
     if (mode == MODE_GAME_OVER) {
         background(127);
-        bossLevel = 0 ;
+        bossLevel = 0;
     }
     /* 게임 승리 */
     if (mode == MODE_GAME_WIN) {
         background(255)
         textFont(font);
-        if(scoreRegistration == false) {
+        if (scoreRegistration == false) {
             score += bossLevel * 10000;
             scoreRegistration = true;
         }
@@ -214,7 +214,7 @@ function draw() {
     }
 
     if (mode == MODE_SCORE_BOARD) {
-        image(titleBackground, -width/2,-height/2,width,height);
+        image(titleBackground, -width / 2, -height / 2, width, height);
         drawScoreBoard();
     }
 
@@ -224,8 +224,8 @@ function draw() {
         time++;
         background(80, 188, 223);
 
-        if(bossLevel == 0){
-            if (birdBoss[0].state == ENEMY_SURVIVE || birdBoss[1].state == ENEMY_SURVIVE || birdBoss[2].state == ENEMY_SURVIVE){
+        if (bossLevel == 0) {
+            if (birdBoss[0].state == ENEMY_SURVIVE || birdBoss[1].state == ENEMY_SURVIVE || birdBoss[2].state == ENEMY_SURVIVE) {
                 drawForestBackground();
                 for (let i = 0; i < 3; i++) {
                     if (birdBoss[i].state == ENEMY_SURVIVE) {
@@ -235,15 +235,14 @@ function draw() {
                         birdBoss[i].displayBossHP(-300 + 190 * i, -340, 160, 40);
                     }
                 }
-            }
-            else{
+            } else {
                 bossLevel = 1;
                 enemy = new EnemyShooter(0, -200, 1, 20, 100, helicopterImage, helicopterPropellerImage);
                 for (let i = 0; i < 200; i++) {
                     enemyBullet[i].x = 10000;
                     enemyBullet[i].y = 0;
                 }
-                for (let i = 0; i<2; i++) {
+                for (let i = 0; i < 2; i++) {
                     enemyMissile[i] = new EnemyMissile();
                 }
 
@@ -256,7 +255,7 @@ function draw() {
             }
         }
 
-        if(bossLevel == 1){
+        if (bossLevel == 1) {
             /* 적이 살아 있을 시 */
             if (enemy.state == ENEMY_SURVIVE) {
                 drawSkyBackground();
@@ -285,8 +284,7 @@ function draw() {
                     enemyMissile[1].display();
                 }
                 enemy.displayBossHP(-300, -340, 590, 40);
-            }
-            else {
+            } else {
                 bossLevel = 2;
 
                 bossSun = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
@@ -299,7 +297,7 @@ function draw() {
                 flightShootDelay = 0;
             }
         }
-        if(bossLevel == 2) {
+        if (bossLevel == 2) {
             if (bossSun.state == ENEMY_SURVIVE) {
                 drawSpaceBackground();
                 bossSun.behavior(flight.x, flight.y);
@@ -316,34 +314,33 @@ function draw() {
                     flight.flightHitBox(bossSun.patternBLeftObject[i], 20, 60);
                     flight.flightHitBox(bossSun.patternBRightObject[i], 20, 60);
                 }
-            }
-            else{
+            } else {
                 mode = MODE_GAME_WIN;
             }
         }
 
         /* 비행기 */
-        if(flight.isFlightDead()){
+        if (flight.isFlightDead()) {
             mode = MODE_GAME_OVER;
         }
         flight.display();
-        flight.displayStat(-300,300, 160, 40, flight.life, playerHPImage);
-        flight.displayStat(-110,300, 160, 40, flight.damage, playerDamageImage);
-        flight.displayStat(80,300, 160, 40, flight.bombNumber, playerBombImage);
+        flight.displayStat(-300, 300, 160, 40, flight.life, playerHPImage);
+        flight.displayStat(-110, 300, 160, 40, flight.damage, playerDamageImage);
+        flight.displayStat(80, 300, 160, 40, flight.bombNumber, playerBombImage);
 
         /* 비행기 총알 출력 */
         for (let i = 0; i < 10; i++) {
             flightShoot[i].move();
             flightShoot[i].display();
-            if(bossLevel == 0) {
+            if (bossLevel == 0) {
                 for (let j = 0; j < 3; j++) {
                     birdBoss[j].hitBox(flightShoot[i], flight.damage);
                 }
             }
-            if(bossLevel == 1) {
+            if (bossLevel == 1) {
                 enemy.hitBox(flightShoot[i], flight.damage);
             }
-            if(bossLevel == 2) {
+            if (bossLevel == 2) {
                 bossSun.hitBox(flightShoot[i], flight.damage);
             }
         }
@@ -374,11 +371,10 @@ function draw() {
 
 function checkItemEffectListener() {
     /* 아이템 효과 시간 체크 함수 */
-    if(countItemEffectTime ==0) {
+    if (countItemEffectTime == 0) {
         this.resetPlayerStatus();
         countItemEffectTime = -1;
-    }
-    else if(countItemEffectTime > 0){
+    } else if (countItemEffectTime > 0) {
         countItemEffectTime -= 1;
     }
 }
@@ -391,7 +387,7 @@ function resetPlayerStatus() {
 }
 
 function keyPressed() {
-    if(mode == MODE_INPUT_PLAYERNAME) {
+    if (mode == MODE_INPUT_PLAYERNAME) {
         if (keyCode === ENTER || keyCode === BACKSPACE) {
             if (keyCode === BACKSPACE) {
                 shorten(nicknameTemp);
@@ -400,7 +396,7 @@ function keyPressed() {
                     nickname = nickname + nicknameTemp[i];
                 }
             }
-            if (keyCode === ENTER){
+            if (keyCode === ENTER) {
                 mode = MODE_GAME_TITLE;
             }
 
@@ -413,45 +409,45 @@ function keyPressed() {
         }
         keyCode = 0;
     }
-    if(mode == MODE_GAME_TITLE) {
-        if(keyCode === UP_ARROW){
-            titleState = (titleState+2)%3;
+    if (mode == MODE_GAME_TITLE) {
+        if (keyCode === UP_ARROW) {
+            titleState = (titleState + 2) % 3;
         }
-        if(keyCode === DOWN_ARROW){
-            titleState = (titleState+1)%3;
+        if (keyCode === DOWN_ARROW) {
+            titleState = (titleState + 1) % 3;
         }
-        if(keyCode === ENTER){
-            if(titleState == 0){
+        if (keyCode === ENTER) {
+            if (titleState == 0) {
                 mode = MODE_IN_GAME;
             }
-            if(titleState == 1){
+            if (titleState == 1) {
                 mode = MODE_SCORE_BOARD;
                 keyCode = 0;
             }
         }
     }
-    if(mode == MODE_IN_GAME){
+    if (mode == MODE_IN_GAME) {
         if (keyCode === ENTER) {
             resetting();
             keyCode = 0;
         }
     }
-    if(mode == MODE_GAME_OVER){
-        if (keyCode === ENTER){
+    if (mode == MODE_GAME_OVER) {
+        if (keyCode === ENTER) {
             resetting();
             bossLevel = 0;
             keyCode = 0;
         }
     }
-    if(mode == MODE_SCORE_BOARD){
-        if (keyCode === ENTER){
+    if (mode == MODE_SCORE_BOARD) {
+        if (keyCode === ENTER) {
             mode = MODE_GAME_TITLE;
             keyCode = 0;
         }
     }
 
     if (mode == MODE_GAME_WIN) {
-        if (keyCode === ENTER){
+        if (keyCode === ENTER) {
             postRanking(nickname, score, time);
             mode = MODE_GAME_TITLE;
             scoreRegistration = false;
@@ -460,25 +456,25 @@ function keyPressed() {
     }
 }
 
-function resetting(){
+function resetting() {
     mode = MODE_IN_GAME;
     flight = new Flight();
-    if(bossLevel == 0) {
+    if (bossLevel == 0) {
         for (let i = 0; i < 3; i++) {
             birdBoss[i] = new BirdBoss(0, -200, 1, 5, 80 + 30 * i, birdPoseAImage, birdPoseBImage);
         }
     }
-    if(bossLevel == 1) {
+    if (bossLevel == 1) {
         enemy = new EnemyShooter(0, -200, 1, 20, 100, helicopterImage, helicopterPropellerImage);
         for (let i = 0; i < 200; i++) {
             enemyBullet[i].x = 10000;
             enemyBullet[i].y = 0;
         }
-        for (let i = 0; i<2; i++) {
+        for (let i = 0; i < 2; i++) {
             enemyMissile[i] = new EnemyMissile();
         }
     }
-    if(bossLevel == 2) {
+    if (bossLevel == 2) {
         bossSun = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
     }
 
@@ -508,79 +504,79 @@ function drawScoreBoard() {
         getRankingBoard(skipRankingCount);
     }
 
-    for(let i = 0; i < rankingList.length; ++i) {
-        text(rankingList[i].nickname, -250, i*45 -140);
-        text(rankingList[i].score, -50, i*45 -140);
-        text(rankingList[i].time,  150, i*45 -140);
+    for (let i = 0; i < rankingList.length; ++i) {
+        text(rankingList[i].nickname, -250, i * 45 - 140);
+        text(rankingList[i].score, -50, i * 45 - 140);
+        text(rankingList[i].time, 150, i * 45 - 140);
     }
 
     nextRankingPrintCount++;
 }
 
-function drawSkyBackground(){
+function drawSkyBackground() {
     //비행기 보스 배경
     image(skyeimg, -300, -300);
-    for(let i=0;i<10;i++){
+    for (let i = 0; i < 10; i++) {
         cloude1[i].display();
         cloude2[i].display();
         cloude3[i].display();
         push();
         cloude1[i].y += 3;
-        if(cloude1[i].y >500){
-            cloude1[i].y = random(-400,-550);
+        if (cloude1[i].y > 500) {
+            cloude1[i].y = random(-400, -550);
         }
         cloude2[i].y += 8;
-        if(cloude2[i].y >500){
-            cloude2[i].y = random(-400,-600);
+        if (cloude2[i].y > 500) {
+            cloude2[i].y = random(-400, -600);
         }
         cloude3[i].y += 3;
-        if(cloude3[i].y > 500){
-            cloude3[i].y = random(-400,-700);
+        if (cloude3[i].y > 500) {
+            cloude3[i].y = random(-400, -700);
         }
         pop();
     }
     //배경 끝
 }
 
-function drawForestBackground(){
+function drawForestBackground() {
     //새 보스 배경
-    image(forestimg,-350,-350);
-    for(let i = 0;i<65;i++){
+    image(forestimg, -350, -350);
+    for (let i = 0; i < 65; i++) {
         forest1[i].display();
         forest2[i].display();
         push();
         forest1[i].y += 5;
-        if(forest1[i].y > 700){
+        if (forest1[i].y > 700) {
             forest1[i].y = -2000;
         }
-        forest1[i].watery+=5;
-        if(forest1[i].watery > 400){
-            forest1[i].watery = random(-400,-600);
+        forest1[i].watery += 5;
+        if (forest1[i].watery > 400) {
+            forest1[i].watery = random(-400, -600);
         }
-        forest2[i].y+=5;
-        if(forest2[i].y > 700){
+        forest2[i].y += 5;
+        if (forest2[i].y > 700) {
             forest2[i].y = -2000;
         }
-        forest2[i].watery+=5;
-        if(forest2[i].watery > 400){
-            forest2[i].watery = random(-700,-900);
+        forest2[i].watery += 5;
+        if (forest2[i].watery > 400) {
+            forest2[i].watery = random(-700, -900);
         }
         pop();
     }
 }
 
-function drawSpaceBackground(){
+function drawSpaceBackground() {
     //썬 보스 배경
     push();
-    translate(0,0,-200);
-    image(spaceimg,-550,-550, 1100, 1100);
-    for(let i =0;i<10;i++){
+    translate(0, 0, -200);
+    image(spaceimg, -550, -550, 1100, 1100);
+    for (let i = 0; i < 10; i++) {
         space[i].display();
-        space[i].x-=5;
-        space[i].y+=5;
-        if(space[i].x < -300){
-            space[i].x=random(300,500);
-            space[i].y=random(-700,0);
+        space[i].x -= 5;
+        space[i].y += 5;
+        if (space[i].x < -300) {
+            space[i].x = random(300, 500);
+            space[i].y = random(-700, 0);
         }
     }
     pop();

@@ -14,7 +14,7 @@ class PlayerItem {
     }
 
     selectColor() {
-        switch(this.itemType) {
+        switch (this.itemType) {
             case ITEM_SPEED_UP:
                 return createVector(255, 0, 0);
             case ITEM_DAMAGE_UP:
@@ -28,8 +28,8 @@ class PlayerItem {
         /* 아이템 이동 함수 */
         this.itemPosition.x += this.itemSpeed.x;
         this.itemPosition.y += this.itemSpeed.y;
-        if ((this.itemPosition.x >= (width/2 - this.itemRadius/2)) || (this.itemPosition.x+width/2 <= this.itemRadius/2)) this.itemSpeed.x *= -1.0;
-        if ((this.itemPosition.y >= (height/2 - this.itemRadius/2)) || (this.itemPosition.y+height/2 <= this.itemRadius/2)) this.itemSpeed.y *= -1.0;
+        if ((this.itemPosition.x >= (width / 2 - this.itemRadius / 2)) || (this.itemPosition.x + width / 2 <= this.itemRadius / 2)) this.itemSpeed.x *= -1.0;
+        if ((this.itemPosition.y >= (height / 2 - this.itemRadius / 2)) || (this.itemPosition.y + height / 2 <= this.itemRadius / 2)) this.itemSpeed.y *= -1.0;
     }
 
     itemListener(flightPosX, flightPosY) {
@@ -48,10 +48,10 @@ class PlayerItem {
 
     itemCoolTimeListener() {
         /* 아이템을 먹고 다시 화면에 출력하는 시간을 계산하는 함수 */
-        if(this.countItemDisplayCoolTime > 0) {
+        if (this.countItemDisplayCoolTime > 0) {
             this.countItemDisplayCoolTime -= 1;
         }
-        if(this.countItemDisplayCoolTime == 0) {
+        if (this.countItemDisplayCoolTime == 0) {
             this.itemSpeed = createVector(4, 5);
             this.colorAlpha = 255;
             this.countItemDisplayCoolTime -= 1;
