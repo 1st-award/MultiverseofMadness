@@ -9,11 +9,15 @@ let playerHPImage;
 let playerDamageImage;
 let playerBombImage;
 // Enemy
+var bossLevel = 0;
 let enemy;
 let birdBoss = [];
 let enemyBullet = [];
 let enemyMissile = [];
 let bossSun;
+const bossBirdLevel = 0;
+const bossHelicopterLevel = 1;
+const bossSunLevel = 2;
 //Background
 let forest1 = [];
 let forest2 = [];
@@ -34,7 +38,6 @@ const ITEM_BULLET_STOP = 2;
 // Game
 var mode;
 var score = 0;
-var stageNum = 0;
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
@@ -56,7 +59,7 @@ let textUserNameImage;
 let textVictoryImage;
 // Title
 let titleState = 0;
-// Boss
+// BossImage
 let birdPoseAImage;
 let birdPoseBImage;
 let helicopterImage;
@@ -191,61 +194,102 @@ function draw() {
         score++;
         background(80, 188, 223);
 
-        /* 적이 살아 있을 시 */
-        if (enemy.state == ENEMY_SURVIVE) {
-            drawSkyBackground();
-            enemy.behavior();
-            enemy.display();
-            flight.flightHitBox(enemy, 20, 60);
-            if (flightBombDelayCount < 0) {
-                for (let j = 0; j < 200; j += 2) {
-                    if (enemyBulletStop == false) {
-                        enemyBullet[j].delay = j;
-                        enemyBullet[j].movePerTime(enemy.x - 12, enemy.y + 23, 2);
-                        enemyBullet[j + 1].delay = j + 1;
-                        enemyBullet[j + 1].movePerTime(enemy.x + 17, enemy.y + 23, 2);
+        if(bossLevel == 0){
+            if (birdBoss[0].state == ENEMY_SURVIVE || birdBoss[1].state == ENEMY_SURVIVE || birdBoss[2].state == ENEMY_SURVIVE){
+                drawForestBackground();
+                for (let i = 0; i < 3; i++) {
+                    if (birdBoss[i].state == ENEMY_SURVIVE) {
+                        birdBoss[i].behavior(flight.x, flight.y);
+                        birdBoss[i].display(flight.x, flight.y);
+                        flight.flightHitBox(birdBoss[i], 20, 60);
+                        birdBoss[i].displayBossHP(-300 + 190 * i, -340, 160, 40);
                     }
-                    enemyBullet[j].display();
-                    enemyBullet[j + 1].display();
-                    flight.flightHitBox(enemyBullet[j], 4, 60);
                 }
-                if (enemyBulletStop == false) {
-                    enemyMissile[0].movePerTime(enemy.x - 7, enemy.y + 25, flight.x, flight.y);
-                    flight.flightHitBox(enemyMissile[0], 4, 60);
-                    enemyMissile[1].movePerTime(enemy.x + 11, enemy.y + 25, flight.x, flight.y);
-                    flight.flightHitBox(enemyMissile[1], 4, 60);
-                }
-                enemyMissile[0].display();
-                enemyMissile[1].display();
             }
-            enemy.displayBossHP(-300, -340, 590, 40);
-        }
-        if (birdBoss[0].state == ENEMY_SURVIVE || birdBoss[1].state == ENEMY_SURVIVE || birdBoss[2].state == ENEMY_SURVIVE){
-            drawForestBackground();
-            for (let i = 0; i < 3; i++) {
-                if (birdBoss[i].state == ENEMY_SURVIVE) {
-                    birdBoss[i].behavior(flight.x, flight.y);
-                    birdBoss[i].display(flight.x, flight.y);
-                    flight.flightHitBox(birdBoss[i], 20, 60);
-                    birdBoss[i].displayBossHP(-300 + 190 * i, -340, 160, 40);
+            else{
+                bossLevel = 1;
+                enemy = new EnemyShooter(0, -200, 1, 20, 100, helicopterImage, helicopterPropellerImage);
+                for (let i = 0; i < 200; i++) {
+                    enemyBullet[i].x = 10000;
+                    enemyBullet[i].y = 0;
                 }
+                for (let i = 0; i<2; i++) {
+                    enemyMissile[i] = new EnemyMissile();
+                }
+
+                for (let i = 0; i < 10; i++) {
+                    flightShoot[i].x = 10000;
+                    flightShoot[i].y = 0;
+                }
+
+                flightShootDelay = 0;
             }
         }
-        if(bossSun.state == ENEMY_SURVIVE ){
-            drawSpaceBackground();
-            bossSun.behavior(flight.x, flight.y);
-            bossSun.display();
-            flight.flightHitBox(bossSun, 20, 60);
-            bossSun.displayBossHP(-300, -340, 590, 40);
-            for(let i=0; i<200; i++){
-                bossSun.patternAObject[i].display();
-                flight.flightHitBox(bossSun.patternAObject[i], 20, 60);
+
+        if(bossLevel == 1){
+            /* 적이 살아 있을 시 */
+            if (enemy.state == ENEMY_SURVIVE) {
+                drawSkyBackground();
+                enemy.behavior();
+                enemy.display();
+                flight.flightHitBox(enemy, 20, 60);
+                if (flightBombDelayCount < 0) {
+                    for (let j = 0; j < 200; j += 2) {
+                        if (enemyBulletStop == false) {
+                            enemyBullet[j].delay = j;
+                            enemyBullet[j].movePerTime(enemy.x - 12, enemy.y + 23, 2);
+                            enemyBullet[j + 1].delay = j + 1;
+                            enemyBullet[j + 1].movePerTime(enemy.x + 17, enemy.y + 23, 2);
+                        }
+                        enemyBullet[j].display();
+                        enemyBullet[j + 1].display();
+                        flight.flightHitBox(enemyBullet[j], 4, 60);
+                    }
+                    if (enemyBulletStop == false) {
+                        enemyMissile[0].movePerTime(enemy.x - 7, enemy.y + 25, flight.x, flight.y);
+                        flight.flightHitBox(enemyMissile[0], 4, 60);
+                        enemyMissile[1].movePerTime(enemy.x + 11, enemy.y + 25, flight.x, flight.y);
+                        flight.flightHitBox(enemyMissile[1], 4, 60);
+                    }
+                    enemyMissile[0].display();
+                    enemyMissile[1].display();
+                }
+                enemy.displayBossHP(-300, -340, 590, 40);
             }
-            for (let i = 0; i<50; i++){
-                bossSun.patternBLeftObject[i].display();
-                bossSun.patternBRightObject[i].display();
-                flight.flightHitBox(bossSun.patternBLeftObject[i], 20, 60);
-                flight.flightHitBox(bossSun.patternBRightObject[i], 20, 60);
+            else {
+                bossLevel = 2;
+
+                bossSun = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
+
+                for (let i = 0; i < 10; i++) {
+                    flightShoot[i].x = 10000;
+                    flightShoot[i].y = 0;
+                }
+
+                flightShootDelay = 0;
+            }
+        }
+        if(bossLevel == 2) {
+            if (bossSun.state == ENEMY_SURVIVE) {
+                drawSpaceBackground();
+                bossSun.behavior(flight.x, flight.y);
+                bossSun.display();
+                flight.flightHitBox(bossSun, 20, 60);
+                bossSun.displayBossHP(-300, -340, 590, 40);
+                for (let i = 0; i < 200; i++) {
+                    bossSun.patternAObject[i].display();
+                    flight.flightHitBox(bossSun.patternAObject[i], 20, 60);
+                }
+                for (let i = 0; i < 50; i++) {
+                    bossSun.patternBLeftObject[i].display();
+                    bossSun.patternBRightObject[i].display();
+                    flight.flightHitBox(bossSun.patternBLeftObject[i], 20, 60);
+                    flight.flightHitBox(bossSun.patternBRightObject[i], 20, 60);
+                }
+            }
+            else{
+                mode = MODE_GAME_WIN;
+                bossLevel == 0;
             }
         }
 
@@ -262,11 +306,17 @@ function draw() {
         for (let i = 0; i < 10; i++) {
             flightShoot[i].move();
             flightShoot[i].display();
-            enemy.hitBox(flightShoot[i], flight.damage);
-            for(let j = 0; j<3 ; j++) {
-                birdBoss[j].hitBox(flightShoot[i], flight.damage);
+            if(bossLevel == 0) {
+                for (let j = 0; j < 3; j++) {
+                    birdBoss[j].hitBox(flightShoot[i], flight.damage);
+                }
             }
-            bossSun.hitBox(flightShoot[i], flight.damage);
+            if(bossLevel == 1) {
+                enemy.hitBox(flightShoot[i], flight.damage);
+            }
+            if(bossLevel == 2) {
+                bossSun.hitBox(flightShoot[i], flight.damage);
+            }
         }
 
         /* 비행기와 아이템 상호작용 */
@@ -336,6 +386,7 @@ function keyPressed() {
     if(mode == MODE_GAME_OVER){
         if (keyCode === ENTER){
             resetting();
+            bossLevel = 0;
         }
     }
     if(mode == MODE_SCORE_BOARD){
@@ -348,21 +399,27 @@ function keyPressed() {
 function resetting(){
     mode = MODE_IN_GAME;
     flight = new Flight();
-    for(let i = 0; i<3; i++) {
-        birdBoss[i] = new BirdBoss(0, -200, 0, 5, 80+ 30*i, birdPoseAImage, birdPoseBImage);
+    if(bossLevel == 0) {
+        for (let i = 0; i < 3; i++) {
+            birdBoss[i] = new BirdBoss(0, -200, 1, 5, 80 + 30 * i, birdPoseAImage, birdPoseBImage);
+        }
     }
-    enemy = new EnemyShooter(0, -200, 0, 20, 100, helicopterImage, helicopterPropellerImage);
-    bossSun  = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
-    for (let i = 0; i<2; i++) {
-        enemyMissile[i] = new EnemyMissile();
+    if(bossLevel == 1) {
+        enemy = new EnemyShooter(0, -200, 1, 20, 100, helicopterImage, helicopterPropellerImage);
+        for (let i = 0; i < 200; i++) {
+            enemyBullet[i].x = 10000;
+            enemyBullet[i].y = 0;
+        }
+        for (let i = 0; i<2; i++) {
+            enemyMissile[i] = new EnemyMissile();
+        }
     }
+    if(bossLevel == 2) {
+        bossSun = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
+    }
+
     score = 0;
     flightShootDelay = 0;
-
-    for (let i = 0; i < 200; i++) {
-        enemyBullet[i].x = 10000;
-        enemyBullet[i].y = 0;
-    }
 
     for (let i = 0; i < 10; i++) {
         flightShoot[i].x = 10000;
