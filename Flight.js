@@ -4,32 +4,24 @@ class Flight {
         this.x = 0;
         this.y = 0;
         this.speed = 3;
-        this.damage = 1;
+        this.damage = 20;
         this.bombNumber = 3;
         this.hitDelay = 0;
     }
-
-    display() {
-        push();
-        translate(this.x, this.y);
-        this.flightShape();
-        pop();
-    }
-
 
     flightShape() {
         /* 비행기 키보드 이동 및 생성 함수 */
         this.flightKeyPressed();
 
         fill(125);
-        if(this.hitDelay > 0) fill(255,0,0);
+        if (this.hitDelay > 0) fill(255, 0, 0);
         triangle(-5, 2, 0, -3, 5, 2);
         triangle(-5, 2, -2.5, 2, -3.75, 3.75);
         fill(0);
         triangle(-2.5, 2, 0, 2, -1.25, 2.75);
         triangle(0, 2, 2.5, 2, 1.25, 2.75);
         fill(125);
-        if(this.hitDelay > 0) fill(255,0,0);
+        if (this.hitDelay > 0) fill(255, 0, 0);
         triangle(2.5, 2, 5, 2, 3.75, 3.75);
         noFill();
     }
@@ -37,7 +29,6 @@ class Flight {
 
     flightKeyPressed() {
         /* 비행기 및 카메라 조절 함수 */
-
         if (keyIsDown(UP_ARROW)) {
             this.y -= this.speed;
         }
@@ -68,7 +59,7 @@ class Flight {
 
         /* 폭탄 사용 시 적의 총알 사라짐 */
         if (keyIsDown(70)) {
-            if(flightBombDelayCount <= 0 && this.bombNumber > 0) {
+            if (flightBombDelayCount <= 0 && this.bombNumber > 0) {
                 this.bombNumber -= 1;
                 flightBombDelayCount = 180;
                 for (let i = 0; i < 200; i++) {
@@ -101,6 +92,7 @@ class Flight {
     }
 
     flightHitBox(enemyBullet, range, hitDelay) {
+        /* 비행기 히트박스 함수 */
         if (abs(enemyBullet.x - this.x) < range && abs(enemyBullet.y - this.y) < range) {
             if (this.hitDelay < 0) {
                 this.hitDelay = hitDelay;
@@ -109,22 +101,39 @@ class Flight {
         }
     }
 
-    isFlightDead(){
-        if(this.life < 0){
+    isFlightDead() {
+        /* 비행기가 죽엇는지 확인하는 함수 */
+        if (this.life <= 0) {
             return true;
         }
     }
 
-    displayStat(posX, posY, width, height, value, imageA){
+    resetStatus() {
+        /* 아이템 효과 리셋 함수 */
+        enemyBulletStop = false;
+        flight.speed = 3;
+        flight.damage = 1;
+    }
+
+    display() {
+        /* 비행기 출력하는 함수 */
+        push();
+        translate(this.x, this.y);
+        this.flightShape();
+        pop();
+    }
+
+    displayStat(posX, posY, width, height, value, imageA) {
+        /* 비행기 정보를 출력하는 함수 */
         image(imageA, posX, posY, height, height);
         push();
-        fill(255,0,0);
-        rect(posX+height,posY,value*(width-height)/5,height);
+        fill(255, 0, 0);
+        rect(posX + height, posY, value * (width - height) / 5, height);
         noFill();
         stroke(0);
         strokeWeight(4);
-        for (let i = 0; i < 5; i++){
-            rect(posX+height+i*(width-height)/5,posY,(width-height)/5,height);
+        for (let i = 0; i < 5; i++) {
+            rect(posX + height + i * (width - height) / 5, posY, (width - height) / 5, height);
         }
         pop();
     }
