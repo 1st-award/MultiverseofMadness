@@ -23,12 +23,13 @@ let forest1 = [];
 let forest2 = [];
 let forestimg;
 let treeimg;
-let cloude1 = [];
-let cloude2 = [];
-let cloude3 = [];
+let leftCloudArray = [];
+let midCloudArray = [];
+let rightCloudArray = [];
 let skyeimg;
 let space = [];
 let spaceimg;
+const CLOUD_POSY_LIMIT = 1000;
 // Item
 let countItemEffectTime = -1;
 let enemyBulletStop = false;
@@ -152,13 +153,14 @@ function setup() {
 
     //비행기 보스 배경
     for (let i = 0; i < 10; i++) {
-        cloude1[i] = new Background_Cloude1();
-    }
-    for (let i = 0; i < 10; i++) {
-        cloude2[i] = new Background_Cloude2();
-    }
-    for (let i = 0; i < 10; i++) {
-        cloude3[i] = new Background_Cloude3();
+        // 왼쪽 구름
+        leftCloudArray[i] = new BackgroundCloud(createVector(60, 190), createVector(-400, -550), 8);
+        leftCloudArray[i].setTranslate();
+        // 가운데 구름
+        midCloudArray[i] = new BackgroundCloud(createVector(-250, 0), createVector(-300, -500), 8);
+        // 오른쪽 구름
+        rightCloudArray[i] = new BackgroundCloud(createVector(0, 100), createVector(-400, -500), 3);
+        rightCloudArray[i].setTranslate();
     }
 
     //썬 보스 배경
@@ -524,23 +526,9 @@ function drawSkyBackground() {
     //비행기 보스 배경
     image(skyeimg, -300, -300);
     for (let i = 0; i < 10; i++) {
-        cloude1[i].display();
-        cloude2[i].display();
-        cloude3[i].display();
-        push();
-        cloude1[i].y += 3;
-        if (cloude1[i].y > 500) {
-            cloude1[i].y = random(-400, -550);
-        }
-        cloude2[i].y += 8;
-        if (cloude2[i].y > 500) {
-            cloude2[i].y = random(-400, -600);
-        }
-        cloude3[i].y += 3;
-        if (cloude3[i].y > 500) {
-            cloude3[i].y = random(-400, -700);
-        }
-        pop();
+        leftCloudArray[i].display();
+        midCloudArray[i].display();
+        rightCloudArray[i].display();
     }
     //배경 끝
 }
