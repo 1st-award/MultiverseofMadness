@@ -129,7 +129,7 @@ function setup() {
     background(127);
     createCanvas(800, 800, WEBGL);
     noStroke();
-
+    // 비행기 생성
     flight = new Flight();
 
     let itemVector = createVector(4, 3);
@@ -381,18 +381,11 @@ function draw() {
 function checkItemEffectListener() {
     /* 아이템 효과 시간 체크 함수 */
     if (countItemEffectTime == 0) {
-        this.resetPlayerStatus();
+        flight.resetStatus();
         countItemEffectTime = -1;
     } else if (countItemEffectTime > 0) {
         countItemEffectTime -= 1;
     }
-}
-
-function resetPlayerStatus() {
-    /* 아이템 효과 리셋 함수 */
-    enemyBulletStop = false;
-    flight.speed = 3;
-    flight.damage = 1;
 }
 
 function keyPressed() {
