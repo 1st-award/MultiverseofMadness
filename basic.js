@@ -19,8 +19,8 @@ const bossBirdLevel = 0;
 const bossHelicopterLevel = 1;
 const bossSunLevel = 2;
 //Background
-let forest1 = [];
-let forest2 = [];
+let leftForestArray = [];
+let rightForestArray = [];
 let forestimg;
 let treeimg;
 let leftCloudArray = [];
@@ -145,10 +145,10 @@ function setup() {
 
     //새 보스 배경
     for (let i = 0; i < 65; i++) {
-        forest1[i] = new Forest1(-2000 + 40 * i);
-    }
-    for (let i = 0; i < 65; i++) {
-        forest2[i] = new Forest2(-2000 + 40 * i);
+        // 왼쪽 숲 생성
+        leftForestArray[i] = new Forest(createVector(70, 90), -2000 + 40 * i, createVector(-400, -600), 36);
+        // 오른쪽 숲 생성
+        rightForestArray[i] = new Forest(createVector(-180, -200), -2000 + 40 * i, createVector(-700, -900), 24);
     }
 
     //비행기 보스 배경
@@ -523,40 +523,21 @@ function drawScoreBoard() {
 }
 
 function drawSkyBackground() {
-    //비행기 보스 배경
+    /* 비행기 보스 배경 출력 함수 */
     image(skyeimg, -300, -300);
     for (let i = 0; i < 10; i++) {
         leftCloudArray[i].display();
         midCloudArray[i].display();
         rightCloudArray[i].display();
     }
-    //배경 끝
 }
 
 function drawForestBackground() {
-    //새 보스 배경
+    /* 새 보스 배경 출력 함수 */
     image(forestimg, -350, -350);
     for (let i = 0; i < 65; i++) {
-        forest1[i].display();
-        forest2[i].display();
-        push();
-        forest1[i].y += 5;
-        if (forest1[i].y > 700) {
-            forest1[i].y = -2000;
-        }
-        forest1[i].watery += 5;
-        if (forest1[i].watery > 400) {
-            forest1[i].watery = random(-400, -600);
-        }
-        forest2[i].y += 5;
-        if (forest2[i].y > 700) {
-            forest2[i].y = -2000;
-        }
-        forest2[i].watery += 5;
-        if (forest2[i].watery > 400) {
-            forest2[i].watery = random(-700, -900);
-        }
-        pop();
+        leftForestArray[i].display();
+        rightForestArray[i].display();
     }
 }
 
