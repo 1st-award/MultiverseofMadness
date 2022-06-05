@@ -8,7 +8,7 @@ class Space {
     }
 
     move() {
-        /* 우주 움직이게하는 함수 */
+        /* 운석 움직이게하는 함수 */
         this.x -= this.speed;
         this.y += this.speed;
         if (this.x < -300) {
