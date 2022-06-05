@@ -542,18 +542,12 @@ function drawForestBackground() {
 }
 
 function drawSpaceBackground() {
-    //썬 보스 배경
+    /* 썬 보스 배경 출력 함수 */
     push();
     translate(0, 0, -200);
     image(spaceimg, -550, -550, 1100, 1100);
     for (let i = 0; i < 10; i++) {
         space[i].display();
-        space[i].x -= 5;
-        space[i].y += 5;
-        if (space[i].x < -300) {
-            space[i].x = random(300, 500);
-            space[i].y = random(-700, 0);
-        }
     }
     pop();
 }
