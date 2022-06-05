@@ -83,11 +83,15 @@ let nickname = [];
 let nicknameTemp = [];
 
 function preload() {
+    /* 리소스 로드 */
+    // Background Resource
     skyeimg = loadImage('resources/skye.png');
     forestimg = loadImage('resources/forest.png');
     treeimg = loadImage('resources/tree1.png');
     spaceimg = loadImage('resources/space.png');
     titleBackground = loadImage('resources/bg.png');
+    //-----------------------------------------------------------------------------------------------------------------
+    // UI Resource
     buttonEmptyImage = loadImage('resources/bt_empty.png');
     buttonQuitImage = loadImage('resources/bt_quit.png');
     buttonStartImage = loadImage('resources/bt_start.png');
@@ -97,11 +101,13 @@ function preload() {
     textTitleImage = loadImage('resources/tex_title.png');
     textUserNameImage = loadImage('resources/tex_username.png');
     textVictoryImage = loadImage('resources/tex_victory.png');
-
+    //-----------------------------------------------------------------------------------------------------------------
+    // Player Resource
     playerHPImage = loadImage('resources/hp.png');
     playerDamageImage = loadImage('resources/damage.png');
     playerBombImage = loadImage('resources/boom.png');
-
+    //-----------------------------------------------------------------------------------------------------------------
+    // Boss Resource
     birdPoseAImage = loadImage('resources/bird1.png');
     birdPoseBImage = loadImage('resources/bird2.png');
     helicopterImage = loadImage('resources/helicopter.png');
@@ -110,9 +116,10 @@ function preload() {
     sunPoseBImage = loadImage('resources/sun2.png');
     yellowMeteoImage = loadImage('resources/yellowmeteo.png');
     redMeteoImage = loadImage('resources/redmeteo.png');
-
-    // Font
+    //-----------------------------------------------------------------------------------------------------------------
+    // Font Resource
     font = loadFont('resources/DungGeunMo.ttf');
+    //-----------------------------------------------------------------------------------------------------------------
 }
 
 
