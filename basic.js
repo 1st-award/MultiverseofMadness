@@ -38,6 +38,7 @@ const ITEM_BULLET_STOP = 2;
 // Game
 var mode;
 var score = 0;
+var time = 0;
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
@@ -45,7 +46,8 @@ const MODE_GAME_OVER = 2;
 const MODE_SCORE_BOARD = 3;
 const ENEMY_DIE = 0;
 const ENEMY_SURVIVE = 1;
-const MODE_GAME_WIN = 3;
+const MODE_GAME_WIN = 4;
+const MODE_INPUT_PLAYERNAME = 5;
 // Image
 let titleBackground;
 let buttonEmptyImage;
@@ -71,11 +73,14 @@ let redMeteoImage;
 // Font
 let font;
 // ScoreBoard
+let scoreRegistration = false;
 let refreshScoreBoard = false;
 let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
 let connectionStatus;
+let nickname = [];
+let nicknameTemp = [];
 
 function preload() {
   skyeimg = loadImage('resources/skye.png');
@@ -112,7 +117,7 @@ function preload() {
 
 
 function setup() {
-    mode = MODE_GAME_TITLE; //initialy the game has not started
+    mode = MODE_INPUT_PLAYERNAME; //initialy the game has not started
     background(127);
     createCanvas(800, 800, WEBGL);
     noStroke();
@@ -159,6 +164,15 @@ function setup() {
 function draw() {
     clear();
     translate(0,0,100);
+    /* 닉네임 입력 */
+    if (mode == MODE_INPUT_PLAYERNAME){
+        textFont(font);
+        background(255);
+        fill(0);
+        textSize(40);
+        text('input nickname', -100,-200);
+        text(nickname, -200,-100);
+    }
     /* 타이틀 */
     if (mode == MODE_GAME_TITLE) {
         image(titleBackground,-width/2,-height/2,width,height);
@@ -172,16 +186,31 @@ function draw() {
         image(buttonStartImage,-100,50,200,50);
         image(buttonEmptyImage,-100,120,200,50);
         image(buttonQuitImage,-100,190,200,50);
+        score = 0;
+        time = 0;
+        bossLevel = 0;
     }
 
     /* 게임 오버 */
     if (mode == MODE_GAME_OVER) {
         background(127);
+        bossLevel = 0 ;
     }
-
     /* 게임 승리 */
     if (mode == MODE_GAME_WIN) {
-        background(255);
+        background(255)
+        textFont(font);
+        if(scoreRegistration == false) {
+            score += bossLevel * 10000;
+            scoreRegistration = true;
+        }
+        fill(0);
+        text('nickname', -100, -200);
+        text(nickname, -200, -200);
+        text('score', -100, -100);
+        text(score, -200, -100);
+        text('time', -100, 0);
+        text(time, -200, 0);
     }
 
     if (mode == MODE_SCORE_BOARD) {
@@ -192,6 +221,7 @@ function draw() {
     /* 인 게임 */
     if (mode == MODE_IN_GAME) {
         score++;
+        time++;
         background(80, 188, 223);
 
         if(bossLevel == 0){
@@ -289,7 +319,6 @@ function draw() {
             }
             else{
                 mode = MODE_GAME_WIN;
-                bossLevel == 0;
             }
         }
 
@@ -362,6 +391,28 @@ function resetPlayerStatus() {
 }
 
 function keyPressed() {
+    if(mode == MODE_INPUT_PLAYERNAME) {
+        if (keyCode === ENTER || keyCode === BACKSPACE) {
+            if (keyCode === BACKSPACE) {
+                shorten(nicknameTemp);
+                nickname = [];
+                for (let i = 0; i < nicknameTemp.length; i++) {
+                    nickname = nickname + nicknameTemp[i];
+                }
+            }
+            if (keyCode === ENTER){
+                mode = MODE_GAME_TITLE;
+            }
+
+        } else {
+            append(nicknameTemp, key);
+            nickname = [];
+            for (let i = 0; i < nicknameTemp.length; i++) {
+                nickname = nickname + nicknameTemp[i];
+            }
+        }
+        keyCode = 0;
+    }
     if(mode == MODE_GAME_TITLE) {
         if(keyCode === UP_ARROW){
             titleState = (titleState+2)%3;
@@ -375,23 +426,36 @@ function keyPressed() {
             }
             if(titleState == 1){
                 mode = MODE_SCORE_BOARD;
+                keyCode = 0;
             }
         }
     }
     if(mode == MODE_IN_GAME){
         if (keyCode === ENTER) {
             resetting();
+            keyCode = 0;
         }
     }
     if(mode == MODE_GAME_OVER){
         if (keyCode === ENTER){
             resetting();
             bossLevel = 0;
+            keyCode = 0;
         }
     }
     if(mode == MODE_SCORE_BOARD){
-        if (keyCode === SPACEBAR){
+        if (keyCode === ENTER){
             mode = MODE_GAME_TITLE;
+            keyCode = 0;
+        }
+    }
+
+    if (mode == MODE_GAME_WIN) {
+        if (keyCode === ENTER){
+            postRanking(nickname, score, time);
+            mode = MODE_GAME_TITLE;
+            scoreRegistration = false;
+            keyCode = 0;
         }
     }
 }
@@ -418,7 +482,6 @@ function resetting(){
         bossSun = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
     }
 
-    score = 0;
     flightShootDelay = 0;
 
     for (let i = 0; i < 10; i++) {

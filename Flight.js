@@ -4,7 +4,7 @@ class Flight {
         this.x = 0;
         this.y = 0;
         this.speed = 3;
-        this.damage = 10;
+        this.damage = 20;
         this.bombNumber = 3;
         this.hitDelay = 0;
     }
