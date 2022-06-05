@@ -17,42 +17,56 @@ class BossSun extends Boss{
 
     behavior(playerPosX, playerPosY){
         this.pattern();
-        if(this.attackDelay < 300 && this.attackDelay >= 200){
-            this.patternA(this.attackDelay-200);
-            this.patternA(this.attackDelay-100);
-        }
-        else{
-            this.patternAState = 0;
-        }
-        if(this.attackDelay <= 100 && this.attackDelay % 10 == 9){
-            this.tempSetting(playerPosX, playerPosY + random(-10, -5));
-            this.temp = (this.attackDelay-1)/2;
-
-        }
-        if(this.attackDelay < 100 && this.attackDelay % 2 == 0){
-            this.patternB(this.attackDelay/2);
-        }
-        else{
-            this.patternBState = 0;
-        }
-        if(this.attackDelay < 0){
-            this.attackDelay = 400;
-        }
-        if(this.attackDelay < 300 && this.attackDelay > 0) {
-            for (let i = 0; i < 200; i++) {
-                this.patternAObject[i].move();
+        /* 폭탄의 지속이 끝날 때 */
+        if (flightBombDelayCount < 0) {
+            /* 총알 멈춤이 끝날 때 */
+            if (enemyBulletStop == false) {
+                /* 패턴 A 지정 */
+                if (this.attackDelay < 300 && this.attackDelay >= 200) {
+                    this.patternA(this.attackDelay - 200);
+                    this.patternA(this.attackDelay - 100);
+                }
+                /* 패턴A 지정 안하는 상태 */
+                else {
+                    this.patternAState = 0;
+                }
+                /* 플레이어 위치 값 저장 */
+                if (this.attackDelay <= 100 && this.attackDelay % 10 == 9) {
+                    this.tempSetting(playerPosX, playerPosY + random(-10, -5));
+                    this.temp = (this.attackDelay - 1) / 2;
+                }
+                /* 패턴 B 지정 */
+                if (this.attackDelay < 100 && this.attackDelay % 2 == 0) {
+                    this.patternB(this.attackDelay / 2);
+                }
+                /* 패턴 B 지정 안하는 상태 */
+                else {
+                    this.patternBState = 0;
+                }
+                /* 값 재설정 */
+                if (this.attackDelay < 0) {
+                    this.attackDelay = 400;
+                }
+                /* 패턴 A 움직이는 시간 지정 */
+                if (this.attackDelay < 300 && this.attackDelay > 0) {
+                    for (let i = 0; i < 200; i++) {
+                        this.patternAObject[i].move();
+                    }
+                }
+                /* 패턴 B 움직이는 시간 지정 */
+                if (this.attackDelay < 100 || this.attackDelay > 300) {
+                    for (let i = 0; i < 50; i++) {
+                        this.patternBLeftObject[i].move();
+                        this.patternBRightObject[i].move();
+                    }
+                }
+                this.attackDelay--;
             }
         }
-        if(this.attackDelay < 100 || this.attackDelay > 300){
-            for(let i = 0; i < 50; i++) {
-                this.patternBLeftObject[i].move();
-                this.patternBRightObject[i].move();
-            }
-        }
-        this.attackDelay--;
         super.isEnemyDead();
     }
 
+    /* 디스플레이 함수 */
     display(){
         push();
         translate(this.x, this.y);
@@ -63,6 +77,7 @@ class BossSun extends Boss{
         pop();
     }
 
+    /* 플레이어 끌어들이기 함수 */
     pattern(){
         let tempX = this.x - flight.x;
         let tempY = this.y - flight.y;
@@ -70,11 +85,13 @@ class BossSun extends Boss{
         flight.y += tempY / sqrt(sq(tempX) + sq(tempY));
     }
 
+    /* 랜덤 방향으로 발사 함수 */
     patternA(i){
         this.patternAState = 1;
         this.patternAObject[i].resetSetting(this.x, this.y);
     }
 
+    /* 플레이어 쪽으로 발사 함수 */
     patternB(i){
         this.patternBState = 1;
         this.patternBLeftObject[i].resetSetting(i, this.x, this.y, this.tempX, this.tempY, this.temp);
@@ -150,6 +167,7 @@ class BossSunPatternB{
     }
 }
 
+/* 패턴 B 왼쪽 방향 클래스 */
 class BossSunPatternBLeft extends BossSunPatternB{
     constructor() {
         super();
@@ -164,6 +182,8 @@ class BossSunPatternBLeft extends BossSunPatternB{
         this.correctionValue = sqrt(sq(this.axisX) + sq(this.axisY));
     }
 }
+
+/* 패턴 B 오른쪽 방향 클래스 */
 class BossSunPatternBRight extends BossSunPatternB{
     constructor() {
         super();
