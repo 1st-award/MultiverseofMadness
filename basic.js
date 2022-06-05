@@ -73,9 +73,9 @@ let yellowMeteoImage;
 let redMeteoImage;
 // Font
 let font;
-// ScoreBoard
-let scoreRegistration = false;
-let refreshScoreBoard = false;
+// RankingBoard
+let rankingRegistration = false;
+let refreshRankingBoard = false;
 let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
@@ -209,9 +209,9 @@ function draw() {
     if (mode == MODE_GAME_WIN) {
         background(255)
         textFont(font);
-        if (scoreRegistration == false) {
+        if (rankingRegistration == false) {
             score += bossLevel * 10000;
-            scoreRegistration = true;
+            rankingRegistration = true;
         }
         fill(0);
         text('nickname', -100, -200);
@@ -224,7 +224,7 @@ function draw() {
 
     if (mode == MODE_SCORE_BOARD) {
         image(titleBackground, -width / 2, -height / 2, width, height);
-        drawScoreBoard();
+        drawRankingBoard();
     }
 
     /* 인 게임 */
@@ -459,7 +459,7 @@ function keyPressed() {
         if (keyCode === ENTER) {
             postRanking(nickname, score, time);
             mode = MODE_GAME_TITLE;
-            scoreRegistration = false;
+            rankingRegistration = false;
             keyCode = 0;
         }
     }
@@ -495,25 +495,29 @@ function resetting() {
     }
 }
 
-function drawScoreBoard() {
+function drawRankingBoard() {
+    /* 랭킹 보드 출력 함수 */
     textFont(font);
     textSize(50);
     text("이름", -250, -200);
     text("점수", -45, -200);
     text("시간", 150, -200);
 
-    if (nextRankingPrintCount > 10 * 60) {
+    if (nextRankingPrintCount > 10 * frameRate()) {
+        // 출력 후 10초 경과시 10등 단위로 출력
         skipRankingCount += 10;
         nextRankingPrintCount = 0;
-        refreshScoreBoard = false;
+        refreshRankingBoard = false;
     }
 
-    if (refreshScoreBoard != true) {
-        refreshScoreBoard = true;
+    if (refreshRankingBoard != true) {
+        // 랭킹을 DB로 부터 json 형태로 가지고 옴
+        refreshRankingBoard = true;
         getRankingBoard(skipRankingCount);
     }
 
     for (let i = 0; i < rankingList.length; ++i) {
+        // 닉네임, 점수, 시간별로 출력
         text(rankingList[i].nickname, -250, i * 45 - 140);
         text(rankingList[i].score, -50, i * 45 - 140);
         text(rankingList[i].time, 150, i * 45 - 140);
