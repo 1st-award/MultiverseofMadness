@@ -35,14 +35,14 @@ const ITEM_SPEED_UP = 0;
 const ITEM_DAMAGE_UP = 1;
 const ITEM_BULLET_STOP = 2;
 // Game
-var mode;
-var score = 0;
-var time = 0;
+let mode;
+let score = 0;
+let time = 0;
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
 const MODE_GAME_OVER = 2;
-const MODE_SCORE_BOARD = 3;
+const MODE_RANKING_BOARD = 3;
 const ENEMY_DIE = 0;
 const ENEMY_SURVIVE = 1;
 const MODE_GAME_WIN = 4;
@@ -78,7 +78,7 @@ let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
 let connectionStatus;
-let nickname = [];
+let nickname = "AAA";
 let nicknameTemp = [];
 
 function preload() {
@@ -123,7 +123,7 @@ function preload() {
 
 
 function setup() {
-    mode = MODE_INPUT_PLAYERNAME; //initialy the game has not started
+    mode = MODE_GAME_WIN; //initialy the game has not started
     background(127);
     createCanvas(800, 800, WEBGL);
     noStroke();
@@ -169,12 +169,16 @@ function draw() {
     translate(0, 0, 100);
     /* 닉네임 입력 */
     if (mode == MODE_INPUT_PLAYERNAME) {
+        push();
         textFont(font);
         background(255);
         fill(0);
         textSize(40);
-        text('input nickname', -100, -200);
-        text(nickname, -200, -100);
+        text('Input Nickname', -120, -200);
+        textSize(80);
+        textAlign(CENTER);
+        text(nickname, 0, -100);
+        pop();
     }
     /* 타이틀 */
     if (mode == MODE_GAME_TITLE) {
@@ -207,16 +211,10 @@ function draw() {
             score += bossLevel * 10000;
             rankingRegistration = true;
         }
-        fill(0);
-        text('nickname', -100, -200);
-        text(nickname, -200, -200);
-        text('score', -100, -100);
-        text(score, -200, -100);
-        text('time', -100, 0);
-        text(time, -200, 0);
+        drawGameWin();
     }
 
-    if (mode == MODE_SCORE_BOARD) {
+    if (mode == MODE_RANKING_BOARD) {
         image(titleBackground, -width / 2, -height / 2, width, height);
         drawRankingBoard();
     }
@@ -368,24 +366,34 @@ function checkItemEffectListener() {
     }
 }
 
+function isAlpha(ch) {
+    /* 입력된 단어가 영어인지 확인하는 함수 */
+    return typeof ch === "string" && ch.length === 1
+        && (ch >= "a" && ch <= "z" || ch >= "A" && ch <= "Z");
+}
+
 function keyPressed() {
     if (mode == MODE_INPUT_PLAYERNAME) {
         if (keyCode === ENTER || keyCode === BACKSPACE) {
             if (keyCode === BACKSPACE) {
                 shorten(nicknameTemp);
-                nickname = [];
-                for (let i = 0; i < nicknameTemp.length; i++) {
+                nickname = "";
+                for (let i = 0; i < nicknameTemp.length && nickname.length < 3; i++) {
                     nickname = nickname + nicknameTemp[i];
                 }
             }
             if (keyCode === ENTER) {
+                if (nickname.length == 0) {
+                    nickname = "AAA";
+                }
                 mode = MODE_GAME_TITLE;
             }
 
         } else {
-            append(nicknameTemp, key);
-            nickname = [];
-            for (let i = 0; i < nicknameTemp.length; i++) {
+            if (isAlpha(key))
+                append(nicknameTemp, key);
+            nickname = "";
+            for (let i = 0; i < nicknameTemp.length && nickname.length < 3; i++) {
                 nickname = nickname + nicknameTemp[i];
             }
         }
@@ -403,7 +411,7 @@ function keyPressed() {
                 mode = MODE_IN_GAME;
             }
             if (titleState == 1) {
-                mode = MODE_SCORE_BOARD;
+                mode = MODE_RANKING_BOARD;
                 keyCode = 0;
             }
         }
@@ -421,7 +429,7 @@ function keyPressed() {
             keyCode = 0;
         }
     }
-    if (mode == MODE_SCORE_BOARD) {
+    if (mode == MODE_RANKING_BOARD) {
         if (keyCode === ENTER) {
             mode = MODE_GAME_TITLE;
             keyCode = 0;
@@ -519,5 +527,21 @@ function drawSpaceBackground() {
     for (let i = 0; i < 10; i++) {
         space[i].display();
     }
+    pop();
+}
+
+function drawGameWin() {
+    /* 게임 이겼을 때 결과하면 출력 함수 */
+    push();
+    fill(0);
+    textSize(60);
+    text('Result', -100, -300);
+    textSize(30);
+    text('Nickname\t', -200, -200);
+    text(nickname, -60, -200);
+    text('Score\t', -200, -100);
+    text(score, -60, -100);
+    text('Time\t', -200, 0);
+    text(time, -60, 0);
     pop();
 }
