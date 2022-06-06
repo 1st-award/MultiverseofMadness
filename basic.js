@@ -35,9 +35,9 @@ const ITEM_SPEED_UP = 0;
 const ITEM_DAMAGE_UP = 1;
 const ITEM_BULLET_STOP = 2;
 // Game
-var mode;
-var score = 0;
-var time = 0;
+let mode;
+let score = 0;
+let time = 0;
 const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
@@ -78,7 +78,7 @@ let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
 let connectionStatus;
-let nickname = "";
+let nickname = "AAA";
 let nicknameTemp = [];
 
 function preload() {
@@ -123,7 +123,7 @@ function preload() {
 
 
 function setup() {
-    mode = MODE_INPUT_PLAYERNAME; //initialy the game has not started
+    mode = MODE_GAME_WIN; //initialy the game has not started
     background(127);
     createCanvas(800, 800, WEBGL);
     noStroke();
@@ -211,13 +211,7 @@ function draw() {
             score += bossLevel * 10000;
             rankingRegistration = true;
         }
-        fill(0);
-        text('nickname', -100, -200);
-        text(nickname, -200, -200);
-        text('score', -100, -100);
-        text(score, -200, -100);
-        text('time', -100, 0);
-        text(time, -200, 0);
+        drawGameWin();
     }
 
     if (mode == MODE_RANKING_BOARD) {
@@ -533,5 +527,21 @@ function drawSpaceBackground() {
     for (let i = 0; i < 10; i++) {
         space[i].display();
     }
+    pop();
+}
+
+function drawGameWin() {
+    /* 게임 이겼을 때 결과하면 출력 함수 */
+    push();
+    fill(0);
+    textSize(60);
+    text('Result', -100, -300);
+    textSize(30);
+    text('Nickname\t', -200, -200);
+    text(nickname, -60, -200);
+    text('Score\t', -200, -100);
+    text(score, -60, -100);
+    text('Time\t', -200, 0);
+    text(time, -60, 0);
     pop();
 }
