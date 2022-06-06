@@ -53,6 +53,7 @@ let buttonEmptyImage;
 let buttonQuitImage;
 let buttonStartImage;
 let buttonTitleImage;
+let buttonRankingBoardImage;
 let textGameOverImage;
 let textScoreImage;
 let textTitleImage;
@@ -95,6 +96,7 @@ function preload() {
     buttonQuitImage = loadImage('resources/bt_quit.png');
     buttonStartImage = loadImage('resources/bt_start.png');
     buttonTitleImage = loadImage('resources/bt_totitle.png');
+    buttonRankingBoardImage = loadImage('resources/bt_ranking.png');
     textGameOverImage = loadImage('resources/tex_gameover.png');
     textScoreImage = loadImage('resources/tex_score.png');
     textTitleImage = loadImage('resources/tex_title.png');
@@ -191,7 +193,7 @@ function draw() {
         pop();
         image(textTitleImage, -100, -200, 200, 200);
         image(buttonStartImage, -100, 50, 200, 50);
-        image(buttonEmptyImage, -100, 120, 200, 50);
+        image(buttonRankingBoardImage, -100, 120, 200, 50);
         image(buttonQuitImage, -100, 190, 200, 50);
         score = 0;
         time = 0;

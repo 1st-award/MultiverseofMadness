@@ -19,7 +19,7 @@ function getData(data) {
     }
 }
 
-function postRanking(nickname, score, time, falseCount=0) {
+function postRanking(nickname, score, time, falseCount = 0) {
     /* json 형태로 랭킹 등록하는 함수 */
     const rankingObject = {
         "nickname": nickname,
@@ -32,6 +32,6 @@ function postRanking(nickname, score, time, falseCount=0) {
     }, function () {
         // Post 실패시 닉네임에 1을 추가하여 중복 회피
         falseCount += 1;
-        connectionStatus = postRanking(nickname.slice(0, 3)+falseCount, score, time, falseCount);
+        connectionStatus = postRanking(nickname.slice(0, 3) + falseCount, score, time, falseCount);
     });
 }
