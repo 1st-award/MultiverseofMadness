@@ -3,7 +3,7 @@ function getRankingBoard(skipRankingNumber) {
     httpGet("https://211.114.29.234:8000/score_board/?skip=" + skipRankingNumber + "&limit=10", "json", getData, function () {
         // Get 실패시 임시 json을 만들어 연결 상태 불량 출력
         rankingList = [{"nickname": "Server", "score": "is", "time": "down"},
-            {"nickname": "Please", "score": "try", "time": "latter"}];
+            {"nickname": "Please", "score": "try", "time": "later"}];
     });
 }
 
@@ -28,9 +28,11 @@ function postRanking(nickname, score, time) {
     };
     httpPost("https://211.114.29.234:8000/score_board/", 'json', rankingObject, function () {
         // Post 성공시 true
+        alert("true");
         connectionStatus = true;
     }, function () {
-        // Post 실패시 false
-        connectionStatus = false;
+        alert("false");
+        // Post 실패시 닉네임에 1을 추가하여 중복 회피
+        connectionStatus = postRanking(nickname+1, score, time);
     });
 }
