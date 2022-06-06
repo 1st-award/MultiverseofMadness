@@ -78,7 +78,7 @@ let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
 let connectionStatus;
-let nickname = "AAA";
+let nickname = "";
 let nicknameTemp = [];
 
 function preload() {
@@ -123,7 +123,7 @@ function preload() {
 
 
 function setup() {
-    mode = MODE_GAME_WIN; //initialy the game has not started
+    mode = MODE_INPUT_PLAYERNAME; //initialy the game has not started
     background(127);
     createCanvas(800, 800, WEBGL);
     noStroke();
