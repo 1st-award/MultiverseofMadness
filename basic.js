@@ -42,7 +42,7 @@ const SPACEBAR = 32;
 const MODE_GAME_TITLE = 0;
 const MODE_IN_GAME = 1;
 const MODE_GAME_OVER = 2;
-const MODE_SCORE_BOARD = 3;
+const MODE_RANKING_BOARD = 3;
 const ENEMY_DIE = 0;
 const ENEMY_SURVIVE = 1;
 const MODE_GAME_WIN = 4;
@@ -78,7 +78,7 @@ let rankingList = [];
 let skipRankingCount = 0;
 let nextRankingPrintCount = 0;
 let connectionStatus;
-let nickname = [];
+let nickname = "";
 let nicknameTemp = [];
 
 function preload() {
@@ -169,12 +169,16 @@ function draw() {
     translate(0, 0, 100);
     /* 닉네임 입력 */
     if (mode == MODE_INPUT_PLAYERNAME) {
+        push();
         textFont(font);
         background(255);
         fill(0);
         textSize(40);
-        text('input nickname', -100, -200);
-        text(nickname, -200, -100);
+        text('Input Nickname', -120, -200);
+        textSize(80);
+        textAlign(CENTER);
+        text(nickname, 0, -100);
+        pop();
     }
     /* 타이틀 */
     if (mode == MODE_GAME_TITLE) {
@@ -216,7 +220,7 @@ function draw() {
         text(time, -200, 0);
     }
 
-    if (mode == MODE_SCORE_BOARD) {
+    if (mode == MODE_RANKING_BOARD) {
         image(titleBackground, -width / 2, -height / 2, width, height);
         drawRankingBoard();
     }
@@ -368,24 +372,34 @@ function checkItemEffectListener() {
     }
 }
 
+function isAlpha(ch) {
+    /* 입력된 단어가 영어인지 확인하는 함수 */
+    return typeof ch === "string" && ch.length === 1
+        && (ch >= "a" && ch <= "z" || ch >= "A" && ch <= "Z");
+}
+
 function keyPressed() {
     if (mode == MODE_INPUT_PLAYERNAME) {
         if (keyCode === ENTER || keyCode === BACKSPACE) {
             if (keyCode === BACKSPACE) {
                 shorten(nicknameTemp);
-                nickname = [];
-                for (let i = 0; i < nicknameTemp.length; i++) {
+                nickname = "";
+                for (let i = 0; i < nicknameTemp.length && nickname.length < 3; i++) {
                     nickname = nickname + nicknameTemp[i];
                 }
             }
             if (keyCode === ENTER) {
+                if (nickname.length == 0) {
+                    nickname = "AAA";
+                }
                 mode = MODE_GAME_TITLE;
             }
 
         } else {
-            append(nicknameTemp, key);
-            nickname = [];
-            for (let i = 0; i < nicknameTemp.length; i++) {
+            if (isAlpha(key))
+                append(nicknameTemp, key);
+            nickname = "";
+            for (let i = 0; i < nicknameTemp.length && nickname.length < 3; i++) {
                 nickname = nickname + nicknameTemp[i];
             }
         }
@@ -403,7 +417,7 @@ function keyPressed() {
                 mode = MODE_IN_GAME;
             }
             if (titleState == 1) {
-                mode = MODE_SCORE_BOARD;
+                mode = MODE_RANKING_BOARD;
                 keyCode = 0;
             }
         }
@@ -421,7 +435,7 @@ function keyPressed() {
             keyCode = 0;
         }
     }
-    if (mode == MODE_SCORE_BOARD) {
+    if (mode == MODE_RANKING_BOARD) {
         if (keyCode === ENTER) {
             mode = MODE_GAME_TITLE;
             keyCode = 0;
