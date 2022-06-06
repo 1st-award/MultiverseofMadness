@@ -492,7 +492,7 @@ function drawRankingBoard() {
 
     for (let i = 0; i < rankingList.length; ++i) {
         // 닉네임, 점수, 시간별로 출력
-        text(rankingList[i].nickname, -250, i * 45 - 140);
+        text(rankingList[i].nickname.slice(0, 3), -250, i * 45 - 140);
         text(rankingList[i].score, -50, i * 45 - 140);
         text(rankingList[i].time, 150, i * 45 - 140);
     }
