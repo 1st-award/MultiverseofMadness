@@ -28,12 +28,10 @@ function postRanking(nickname, score, time, falseCount=0) {
     };
     httpPost("https://211.114.29.234:8000/score_board/", 'json', rankingObject, function () {
         // Post 성공시 true
-        alert("true");
         connectionStatus = true;
     }, function () {
-        alert("false");
         // Post 실패시 닉네임에 1을 추가하여 중복 회피
         falseCount += 1;
-        connectionStatus = postRanking(nickname+1, score, time, falseCount);
+        connectionStatus = postRanking(nickname+falseCount, score, time, falseCount);
     });
 }
