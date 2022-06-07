@@ -11,6 +11,7 @@ class BossBird extends Boss{
         }
         /* 돌진 */
         else if(this.attackDelay > 197){
+            birdSound.play();
             this.x += this.tempX/20;
             this.y += this.tempY/20;
         }
@@ -18,6 +19,9 @@ class BossBird extends Boss{
         else if(this.attackDelay > 187){
             this.x -= this.tempX/10;
             this.y -= this.tempY/10;
+        }
+        else if(this.attackDelay == 187){
+            birdSound.stop();
         }
         /* 기본 움직임 */
         else {

@@ -16,6 +16,10 @@ class BossSun extends Boss{
     }
 
     behavior(playerPosX, playerPosY){
+        if(!backgroundBossSunSound.isPlaying()){
+            backgroundBossSunSound.setVolume(0.6);
+            backgroundBossSunSound.play();
+        }
         this.pattern();
         /* 폭탄의 지속이 끝날 때 */
         if (flightBombDelayCount < 0) {
@@ -23,6 +27,10 @@ class BossSun extends Boss{
             if (enemyBulletStop == false) {
                 /* 패턴 A 지정 */
                 if (this.attackDelay < 300 && this.attackDelay >= 200) {
+                    if(this.attackDelay % 10 == 9){
+                        fireBallSound.setVolume(0.4);
+                        fireBallSound.play();
+                    }
                     this.patternA(this.attackDelay - 200);
                     this.patternA(this.attackDelay - 100);
                 }
@@ -32,6 +40,8 @@ class BossSun extends Boss{
                 }
                 /* 플레이어 위치 값 저장 */
                 if (this.attackDelay <= 100 && this.attackDelay % 10 == 9) {
+                    fireBallSound.setVolume(0.8);
+                    fireBallSound.play();
                     this.tempSetting(playerPosX, playerPosY + random(-10, -5));
                     this.temp = (this.attackDelay - 1) / 2;
                 }

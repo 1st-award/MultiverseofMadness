@@ -13,6 +13,11 @@ class BossHelicopter extends Boss {
     }
 
     behavior(){
+        if(!helicopterSound.isPlaying()) {
+            helicopterSound.reverseBuffer();
+            helicopterSound.setVolume(0.1);
+            helicopterSound.play();
+        }
         super.movepattern();
         /* 폭탄이 지속이 끝날 떄 */
         if (flightBombDelayCount < 0) {
@@ -30,9 +35,9 @@ class BossHelicopter extends Boss {
         translate(this.x, this.y);
         this.lifePerColor();
         rotateZ(PI);
-        image(this.img1,-40,-40,80,80);
+        image(this.img1,-80,-80,160,160);
         rotateZ(frameCount/4);
-        image(this.img2,-40,-40,80,80);
+        image(this.img2,-80,-80,160,160);
         pop();
     }
 
@@ -40,18 +45,16 @@ class BossHelicopter extends Boss {
     patternBullet() {
         for (let j = 0; j < 200; j += 2) {
             bossHelicopter.patternBulletObject[j].delay = j;
-            bossHelicopter.patternBulletObject[j].movePerTime(this.x - 12, this.y + 23, 2);
+            bossHelicopter.patternBulletObject[j].movePerTime(this.x - 27, this.y + 41, 2);
             bossHelicopter.patternBulletObject[j + 1].delay = j + 1;
-            bossHelicopter.patternBulletObject[j + 1].movePerTime(this.x + 17, this.y + 23, 2);
+            bossHelicopter.patternBulletObject[j + 1].movePerTime(this.x + 32, this.y + 41, 2);
         }
-        bossHelicopter.patternMissileObject[0].movePerTime(this.x - 7, this.y + 25, flight.x, flight.y);
-        bossHelicopter.patternMissileObject[1].movePerTime(this.x + 11, this.y + 25, flight.x, flight.y);
     }
 
     /* 미사일 함수 */
     patternMissile(){
-        bossHelicopter.patternMissileObject[0].movePerTime(this.x - 7, this.y + 25, flight.x, flight.y);
-        bossHelicopter.patternMissileObject[1].movePerTime(this.x + 11, this.y + 25, flight.x, flight.y);
+        bossHelicopter.patternMissileObject[0].movePerTime(this.x - 14, this.y + 50, flight.x, flight.y);
+        bossHelicopter.patternMissileObject[1].movePerTime(this.x + 21, this.y + 50, flight.x, flight.y);
     }
 }
 
@@ -96,7 +99,7 @@ class BossHelicopterBullet {
     display() {
         push();
         translate(this.x, this.y);
-        fill(255, 255, 0);
+        fill(255, 165, 0);
         sphere(4);
         pop();
     }
@@ -116,7 +119,7 @@ class BossHelicopterMissile{
 
     movePerTime(bossPosX, bossPosY, playerPosX, playerPosY) {
         /* 시간 재설정 */
-        if(this.time > 200){
+        if(this.time > 400){
             this.time = 0;
         }
         /* 보스 위치로 복귀 */
@@ -128,7 +131,7 @@ class BossHelicopterMissile{
             this.move();
             push();
             fill(230,0,0);
-            rect(this.tempX-5, this.tempY-5, 10, 10);
+            rect(this.tempX-15, this.tempY-15, 30, 30);
             pop();
         }
         /* 플레이어 까지의 거리 저장 */
@@ -137,12 +140,16 @@ class BossHelicopterMissile{
         }
         /* 보스 위치로 설정, 플레이어 위치 설정 */
         if (this.time > 0 && this.time < 100){
+            if(this.time%20 == 1) {
+                radarSound.setVolume(0.1);
+                radarSound.play();
+            }
             this.resetSetting(bossPosX, bossPosY);
             this.tempSetting(playerPosX, playerPosY)
             push();
             fill(0,0,255);
             if (this.time % 20 > 9 ) fill(255,0,0);
-            rect(this.tempX-5, this.tempY-5, 10, 10);   // 플레이어 위치 표시
+            rect(this.tempX-15, this.tempY-15, 30, 30);   // 플레이어 위치 표시
             pop();
         }
         this.time++;
@@ -171,7 +178,7 @@ class BossHelicopterMissile{
         push();
         translate(this.x, this.y);
         fill(0);
-        rect(-0.5,-4,1,8);
+        rect(-2,-4,4,8);
         pop();
     }
 
