@@ -25,7 +25,9 @@ class BossBird extends Boss{
         }
         /* 기본 움직임 */
         else {
-            super.movepattern();
+            if(enemyStop == false) {
+                super.movepattern();
+            }
         }
         this.attackDelay--;
         super.isEnemyDead();

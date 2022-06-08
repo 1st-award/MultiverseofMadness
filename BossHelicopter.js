@@ -18,11 +18,11 @@ class BossHelicopter extends Boss {
             helicopterSound.setVolume(0.1);
             helicopterSound.play();
         }
-        super.movepattern();
-        /* 폭탄이 지속이 끝날 떄 */
-        if (flightBombDelayCount < 0) {
-            /* 총알 멈춤이 끝날 때 */
-            if (enemyBulletStop == false) {
+        /* 총알 멈춤이 끝날 때 */
+        if (enemyStop == false) {
+            super.movepattern();
+            /* 폭탄이 지속이 끝날 떄 */
+            if (flightBombDelayCount < 0) {
                 this.patternBullet();
                 this.patternMissile();
             }
@@ -36,7 +36,7 @@ class BossHelicopter extends Boss {
         this.lifePerColor();
         rotateZ(PI);
         image(this.img1,-80,-80,160,160);
-        rotateZ(frameCount/4);
+        rotateZ(frameCount / 4);
         image(this.img2,-80,-80,160,160);
         pop();
     }
