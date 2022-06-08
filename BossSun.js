@@ -24,7 +24,7 @@ class BossSun extends Boss{
         /* 폭탄의 지속이 끝날 때 */
         if (flightBombDelayCount < 0) {
             /* 총알 멈춤이 끝날 때 */
-            if (enemyBulletStop == false) {
+            if (enemyStop == false) {
                 /* 패턴 A 지정 */
                 if (this.attackDelay < 300 && this.attackDelay >= 200) {
                     if(this.attackDelay % 10 == 9){
