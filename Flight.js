@@ -58,6 +58,7 @@ class Flight {
         /* 스페이스 바를 누를 시 총알이 발사 */
         if (keyIsDown(SPACEBAR)) {
             if (this.flightShootDelayCount <= 0) {
+                lazerSound.setVolume(0.2);
                 lazerSound.play();
                 this.flightShootDelayCount = PLAYER_SHOOT_DELAY;
                 flight.bullet[countShoot % 10].x = flight.x;
@@ -69,8 +70,10 @@ class Flight {
         /* 폭탄 사용 시 적의 총알 사라짐 */
         if (keyIsDown(70)) {
             if (flightBombDelayCount <= 0 && this.bombNumber > 0) {
+                explosionSound.setVolume(0.4);
+                explosionSound.play();
                 this.bombNumber -= 1;
-                flightBombDelayCount = 180;
+                flightBombDelayCount = 10;
             }
         }
 
@@ -99,7 +102,9 @@ class Flight {
     flightHitBox(enemyBullet, range, hitDelay) {
         /* 비행기 히트박스 함수 */
         if (abs(enemyBullet.x - this.x) < range && abs(enemyBullet.y - this.y) < range) {
-            if (this.hitDelay < 0) {
+            if (this.hitDelay < 0 && this.life > 0) {
+                tearingSound.setVolume(0.3);
+                tearingSound.play();
                 this.hitDelay = hitDelay;
                 flight.life--;
             }
