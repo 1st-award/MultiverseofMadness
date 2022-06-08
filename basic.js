@@ -8,10 +8,11 @@ let playerHPImage;
 let playerDamageImage;
 let playerBombImage;
 // Boss
-var bossLevel = 0;
+var bossLevel;
 let bossBird = [];
 let bossHelicopter;
 let bossSun;
+const tutorialLevel = -1;
 const bossBirdLevel = 0;
 const bossHelicopterLevel = 1;
 const bossSunLevel = 2;
@@ -29,7 +30,7 @@ let spaceimg;
 const CLOUD_POSY_LIMIT = 1000;
 // Item
 let countItemEffectTime = -1;
-let enemyBulletStop = false;
+let enemyStop = false;
 const ITEM_SPEED_UP = 0;
 const ITEM_DAMAGE_UP = 1;
 const ITEM_BULLET_STOP = 2;
@@ -167,7 +168,8 @@ function setup() {
     background(127);
     createCanvas(800, 800, WEBGL);
     noStroke();
-
+    flight = new Flight();
+    bossLevel = tutorialLevel;
     let itemVector = createVector(4, 3);
     item = new PlayerItem(itemVector, true);
 
@@ -205,7 +207,7 @@ function draw() {
     if (mode == MODE_INPUT_PLAYERNAME) {
         push();
         textFont(font);
-        background(255);
+        background(250);
         fill(0);
         textSize(40);
         text('Input Nickname', -120, -200);
@@ -229,7 +231,7 @@ function draw() {
         image(buttonQuitImage, -100, 190, 200, 50);
         score = 0;
         time = 0;
-        bossLevel = 0;
+        bossLevel = tutorialLevel;
     }
 
     /* 게임 승리 */
@@ -253,7 +255,9 @@ function draw() {
         score++;
         time++;
         background(80, 188, 223);
-
+        if (bossLevel == tutorialLevel){
+            drawTutorial();
+        }
         if (bossLevel == bossBirdLevel) {
             /* bossBird배열 중 하나 이상이 살아 있을 시 */
             if (bossBird[0].state == ENEMY_SURVIVE || bossBird[1].state == ENEMY_SURVIVE || bossBird[2].state == ENEMY_SURVIVE) {
@@ -279,7 +283,7 @@ function draw() {
                     bossLevel = bossHelicopterLevel;
                     flight = new Flight();
                     bossHelicopter = new BossHelicopter(0, -200, 1, 20, 100, helicopterImage, helicopterPropellerImage);
-                    enemyBulletStop = false;
+                    enemyStop = false;
                 }
             }
         }
@@ -323,7 +327,7 @@ function draw() {
                     bossLevel = bossSunLevel;
                     flight = new Flight();
                     bossSun = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
-                    enemyBulletStop = false;
+                    enemyStop = false;
                 }
             }
         }
@@ -387,15 +391,15 @@ function draw() {
         for (let i = 0; i < 10; i++) {
             flight.bullet[i].move();
             flight.bullet[i].display();
-            if (bossLevel == 0) {
+            if (bossLevel == bossBirdLevel) {
                 for (let j = 0; j < 3; j++) {
                     bossBird[j].hitBox(flight.bullet[i], flight.damage);
                 }
             }
-            if (bossLevel == 1) {
+            if (bossLevel == bossHelicopterLevel) {
                 bossHelicopter.hitBox(flight.bullet[i], flight.damage);
             }
-            if (bossLevel == 2) {
+            if (bossLevel == bossSunLevel) {
                 bossSun.hitBox(flight.bullet[i], flight.damage);
             }
         }
@@ -411,7 +415,7 @@ function draw() {
                 }
                 break;
             case ITEM_BULLET_STOP:
-                enemyBulletStop = true;
+                enemyStop = true;
                 break;
             case ITEM_GET_BOMB:
                 if(flight.bombNumber < 5) {
@@ -498,18 +502,24 @@ function keyPressed() {
             }
             if (titleState == 1) {
                 mode = MODE_RANKING_BOARD;
-                keyCode = 0;
             }
             if (titleState == 2) {
                 window.close();
             }
+            keyCode = 0;
         }
     }
     if (mode == MODE_IN_GAME) {
         if (keyCode === ENTER) {
-            selectSound.setVolume(0.4);
-            selectSound.play();
-            resetting();
+            if(bossLevel == tutorialLevel){
+                bossLevel = bossBirdLevel;
+                resetting();
+            }
+            else {
+                selectSound.setVolume(0.4);
+                selectSound.play();
+                resetting();
+            }
             keyCode = 0;
         }
         if (flight.state == false && keyCode == SPACEBAR){
@@ -541,15 +551,15 @@ function resetting() {
     continueFramecount = 0;
     isGameoverSoundPlayed = false;
     flight = new Flight();
-    if (bossLevel == 0) {
+    if (bossLevel == bossBirdLevel) {
         for (let i = 0; i < 3; i++) {
             bossBird[i] = new BossBird(0, -200, 1, 5, 80 + 30 * i, birdPoseAImage, birdPoseBImage);
         }
     }
-    if (bossLevel == 1) {
+    if (bossLevel == bossHelicopterLevel) {
         bossHelicopter = new BossHelicopter(0, -200, 1, 20, 100, helicopterImage, helicopterPropellerImage);
     }
-    if (bossLevel == 2) {
+    if (bossLevel == bossSunLevel) {
         bossSun = new BossSun(0, -400, 1, 100, 600, sunPoseAImage, sunPoseBImage);
     }
 
@@ -656,10 +666,65 @@ function drawGameOver() {
         text(remaintime, 0, 100);
         pop();
     }
-    if(remaintime < 0){
+    if(remaintime == 0){
+        birdSound.stop();
+        helicopterSound.stop();
         fireBallSound.stop();
         backgroundBossSunSound.stop();
         mode = MODE_GAME_TITLE;
     }
     isGameOver = false;
+}
+
+function drawTutorial(){
+    textFont(font);
+    image(titleBackground, -width / 2, -height / 2, width, height);
+    push();
+    stroke(0);
+    strokeWeight(4);
+    textSize(40);
+    fill(255);
+    rect(-215,65,50,50);
+    rect(-215,115,50,50);
+    rect(-265,115,50,50);
+    rect(-165,115,50,50);
+    rect(-65,115,200,50);
+    rect(210,115,50,50);
+    beginShape();
+    vertex(245, -65);
+    vertex(245, -115);
+    vertex(305, -115);
+    vertex(305, -15);
+    vertex(185, -15);
+    vertex(185, -65);
+    endShape(CLOSE);
+    fill(0);
+    text('↑',-200,100);
+    text('↓',-200,150);
+    text('←',-250,150);
+    text('→',-150,150);
+    text('M O V E', -260, 200);
+    text('S P A C E',-50,150);
+    text('A T A C K',-50,200);
+    text('B O O M',175,200);
+    text('F',225,150);
+    text('I T E M', -250, -280);
+    image(speedUpImage, -265, -265, 50, 50);
+    text(':SPEED+1', -200, -230);
+    image(swordImage, -265, -215, 50, 50);
+    text(':POWER+1', -200, -180);
+    image(sandClockImage, -265, -165, 50, 50);
+    text(':ENEMY STOP', -200, -130);
+    image(playerBombImage, -265, -115, 50, 50);
+    text(':BOMB+1', -200, -80);
+    image(playerHPImage, -265, -65, 50, 50);
+    text(':LIFE+1', -200, -30);
+    text('ENTER', 200, -30);
+    text('LIFE', -290, 290);
+    text('POWER', -100, 290);
+    text('BOMB', 90, 290);
+    textSize(30);
+    text('START LEVEL', 175, 10);
+    text('RESTART LEVEL', 145, 30);
+    pop();
 }

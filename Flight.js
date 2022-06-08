@@ -122,7 +122,7 @@ class Flight {
 
     resetStatus() {
         /* 아이템 효과 리셋 함수 */
-        enemyBulletStop = false;
+        enemyStop = false;
         this.speed = 3;
     }
 
