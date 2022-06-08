@@ -170,9 +170,9 @@ function setup() {
     //새 보스 배경
     for (let i = 0; i < 65; i++) {
         // 왼쪽 숲 생성
-        leftForestArray[i] = new Forest(createVector(70, 90), -2000 + 40 * i, createVector(-400, -600), 36);
+        leftForestArray[i] = new BackgroundForest(createVector(70, 90), -2000 + 40 * i, createVector(-400, -600), 36);
         // 오른쪽 숲 생성
-        rightForestArray[i] = new Forest(createVector(-180, -200), -2000 + 40 * i, createVector(-700, -900), 24);
+        rightForestArray[i] = new BackgroundForest(createVector(-180, -200), -2000 + 40 * i, createVector(-700, -900), 24);
     }
 
     //비행기 보스 배경
@@ -189,7 +189,7 @@ function setup() {
 
     //썬 보스 배경
     for (let i = 0; i < 10; i++) {
-        space[i] = new Space();
+        space[i] = new BackgroundSpace();
     }
 }
 
@@ -300,8 +300,10 @@ function draw() {
                 }
                 else{
                     for (let i = 0; i < 200; i++) {
-                        bossHelicopter.patternBulletObject[i].y = 1500;
+                        bossHelicopter.patternBulletObject[i].y = 1000;
                     }
+                    bossHelicopter.patternMissileObject[0].y = 1000;
+                    bossHelicopter.patternMissileObject[1].y = 1000;
                 }
                 bossHelicopter.displayBossHP(-300, -340, 590, 40);
             } else {
@@ -329,15 +331,26 @@ function draw() {
                 bossSun.behavior(flight.x, flight.y);
                 bossSun.display();
                 flight.flightHitBox(bossSun, 20, 60);
-                for (let i = 0; i < 200; i++) {
-                    bossSun.patternAObject[i].display();
-                    flight.flightHitBox(bossSun.patternAObject[i], 20, 60);
+                if(flightBombDelayCount < 0) {
+                    for (let i = 0; i < 200; i++) {
+                        bossSun.patternAObject[i].display();
+                        flight.flightHitBox(bossSun.patternAObject[i], 20, 60);
+                    }
+                    for (let i = 0; i < 50; i++) {
+                        bossSun.patternBLeftObject[i].display();
+                        bossSun.patternBRightObject[i].display();
+                        flight.flightHitBox(bossSun.patternBLeftObject[i], 20, 60);
+                        flight.flightHitBox(bossSun.patternBRightObject[i], 20, 60);
+                    }
                 }
-                for (let i = 0; i < 50; i++) {
-                    bossSun.patternBLeftObject[i].display();
-                    bossSun.patternBRightObject[i].display();
-                    flight.flightHitBox(bossSun.patternBLeftObject[i], 20, 60);
-                    flight.flightHitBox(bossSun.patternBRightObject[i], 20, 60);
+                else{
+                    for(let i = 0; i < 200; i++) {
+                        bossSun.patternAObject[i].y = 1000;
+                    }
+                    for(let i = 0; i < 50; i++){
+                        bossSun.patternBLeftObject[i].y = 1000;
+                        bossSun.patternBRightObject[i].y = 1000;
+                    }
                 }
                 bossSun.displayBossHP(-300, -340, 590, 40);
             } else {
@@ -436,9 +449,9 @@ function isAlpha(ch) {
 
 function keyPressed() {
     if (mode == MODE_INPUT_PLAYERNAME) {
-        selectSound.play();
         if (keyCode === ENTER || keyCode === BACKSPACE) {
             if (keyCode === BACKSPACE) {
+                selectSound.play();
                 shorten(nicknameTemp);
                 nickname = "";
                 for (let i = 0; i < nicknameTemp.length && nickname.length < 3; i++) {
@@ -453,8 +466,10 @@ function keyPressed() {
             }
 
         } else {
-            if (isAlpha(key))
+            if (isAlpha(key) && nicknameTemp.length < 3) {
+                selectSound.play();
                 append(nicknameTemp, key);
+            }
             nickname = "";
             for (let i = 0; i < nicknameTemp.length && nickname.length < 3; i++) {
                 nickname = nickname + nicknameTemp[i];
@@ -491,7 +506,6 @@ function keyPressed() {
         }
         if (flight.state == false && keyCode == SPACEBAR){
             continueFramecount += 60;
-            print('1');
         }
     }
     if (mode == MODE_RANKING_BOARD) {
@@ -633,6 +647,8 @@ function drawGameOver() {
         pop();
     }
     if(remaintime < 0){
+        fireBallSound.stop();
+        backgroundBossSunSound.stop();
         mode = MODE_GAME_TITLE;
     }
     isGameOver = false;

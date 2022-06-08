@@ -70,7 +70,7 @@ class Flight {
         if (keyIsDown(70)) {
             if (flightBombDelayCount <= 0 && this.bombNumber > 0) {
                 this.bombNumber -= 1;
-                flightBombDelayCount = 180;
+                flightBombDelayCount = 10;
             }
         }
 
