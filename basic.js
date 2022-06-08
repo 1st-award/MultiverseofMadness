@@ -100,6 +100,8 @@ let paperDieSound;
 let countSound;
 let selectSound;
 let gameWinSound;
+let explosionSound;
+let tearingSound;
 
 function preload() {
     /* 리소스 로드 */
@@ -156,6 +158,8 @@ function preload() {
     countSound = loadSound('https://211.114.29.234:8000/resources/count.mp3');
     selectSound = loadSound('https://211.114.29.234:8000/resources/select.mp3');
     gameWinSound = loadSound('https://211.114.29.234:8000/resources/gamewin.wav');
+    explosionSound = loadSound('https://211.114.29.234:8000/resources/explosion.ogg');
+    tearingSound = loadSound('https://211.114.29.234:8000/resources/tearing.wav');
 }
 
 function setup() {
@@ -451,6 +455,7 @@ function keyPressed() {
     if (mode == MODE_INPUT_PLAYERNAME) {
         if (keyCode === ENTER || keyCode === BACKSPACE) {
             if (keyCode === BACKSPACE) {
+                selectSound.setVolume(0.4);
                 selectSound.play();
                 shorten(nicknameTemp);
                 nickname = "";
@@ -467,6 +472,7 @@ function keyPressed() {
 
         } else {
             if (isAlpha(key) && nicknameTemp.length < 3) {
+                selectSound.setVolume(0.4);
                 selectSound.play();
                 append(nicknameTemp, key);
             }
@@ -485,6 +491,7 @@ function keyPressed() {
             titleState = (titleState + 1) % 3;
         }
         if (keyCode === ENTER) {
+            selectSound.setVolume(0.4);
             selectSound.play();
             if (titleState == 0) {
                 mode = MODE_IN_GAME;
@@ -500,6 +507,7 @@ function keyPressed() {
     }
     if (mode == MODE_IN_GAME) {
         if (keyCode === ENTER) {
+            selectSound.setVolume(0.4);
             selectSound.play();
             resetting();
             keyCode = 0;
@@ -510,6 +518,7 @@ function keyPressed() {
     }
     if (mode == MODE_RANKING_BOARD) {
         if (keyCode === ENTER) {
+            selectSound.setVolume(0.4);
             selectSound.play();
             mode = MODE_GAME_TITLE;
             keyCode = 0;
@@ -517,6 +526,7 @@ function keyPressed() {
     }
     if (mode == MODE_GAME_WIN) {
         if (keyCode === ENTER) {
+            selectSound.setVolume(0.4);
             selectSound.play();
             postRanking(nickname, score, time);
             mode = MODE_GAME_TITLE;

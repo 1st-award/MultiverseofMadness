@@ -17,7 +17,7 @@ class BossSun extends Boss{
 
     behavior(playerPosX, playerPosY){
         if(!backgroundBossSunSound.isPlaying()){
-            backgroundBossSunSound.setVolume(0.4);
+            backgroundBossSunSound.setVolume(0.2);
             backgroundBossSunSound.play();
         }
         this.pattern();
@@ -28,7 +28,7 @@ class BossSun extends Boss{
                 /* 패턴 A 지정 */
                 if (this.attackDelay < 300 && this.attackDelay >= 200) {
                     if(this.attackDelay % 10 == 9){
-                        fireBallSound.setVolume(0.4);
+                        fireBallSound.setVolume(0.2);
                         fireBallSound.play();
                     }
                     this.patternA(this.attackDelay - 200);
@@ -40,7 +40,7 @@ class BossSun extends Boss{
                 }
                 /* 플레이어 위치 값 저장 */
                 if (this.attackDelay <= 100 && this.attackDelay % 10 == 9) {
-                    fireBallSound.setVolume(0.6);
+                    fireBallSound.setVolume(0.4);
                     fireBallSound.play();
                     this.tempSetting(playerPosX, playerPosY + random(-10, -5));
                     this.temp = (this.attackDelay - 1) / 2;
