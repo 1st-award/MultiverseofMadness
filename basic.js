@@ -149,8 +149,8 @@ function preload() {
     font = loadFont('resources/DungGeunMo.ttf');
     //-----------------------------------------------------------------------------------------------------------------
     // Sound Resource
-    lazerSound = loadSound('https://211.114.29.234:8000/resources/laser.wav');
-    birdSound = loadSound('https://211.114.29.234:8000/resources/bird.mp3');
+    lazerSound = loadSound('https://211.114.29.234:8000/resources/laser2.wav');
+    birdSound = loadSound('https://211.114.29.234:8000/resources/bird2.mp3');
     helicopterSound = loadSound('https://211.114.29.234:8000/resources/helicopter.wav');
     radarSound = loadSound('https://211.114.29.234:8000/resources/radar.wav');
     backgroundBossSunSound = loadSound('https://211.114.29.234:8000/resources/noise.wav');
@@ -160,7 +160,7 @@ function preload() {
     selectSound = loadSound('https://211.114.29.234:8000/resources/select.mp3');
     gameWinSound = loadSound('https://211.114.29.234:8000/resources/gamewin.wav');
     explosionSound = loadSound('https://211.114.29.234:8000/resources/explosion.ogg');
-    tearingSound = loadSound('https://211.114.29.234:8000/resources/tearing.wav');
+    tearingSound = loadSound('https://211.114.29.234:8000/resources/tearing2.wav');
 }
 
 function setup() {
@@ -236,7 +236,7 @@ function draw() {
 
     /* 게임 승리 */
     if (mode == MODE_GAME_WIN) {
-        background(255)
+        background(250)
         textFont(font);
         if (rankingRegistration == false) {
             score += bossLevel * 10000;
@@ -456,8 +456,10 @@ function isAlpha(ch) {
 }
 
 function keyPressed() {
+    /* 키보드 입력시 호출되는 함수 */
     if (mode == MODE_INPUT_PLAYERNAME) {
         if (keyCode === ENTER || keyCode === BACKSPACE) {
+            /* 엔터, delete 키 */
             if (keyCode === BACKSPACE) {
                 selectSound.setVolume(0.4);
                 selectSound.play();
@@ -476,6 +478,7 @@ function keyPressed() {
 
         } else {
             if (isAlpha(key) && nicknameTemp.length < 3) {
+                /* 알파벳이고 닉네임템프 길이가 3이하 일떄 */
                 selectSound.setVolume(0.4);
                 selectSound.play();
                 append(nicknameTemp, key);
@@ -547,7 +550,7 @@ function keyPressed() {
 }
 
 function resetting() {
-    mode = MODE_IN_GAME;
+    /* 객체 새로 생성 */
     continueFramecount = 0;
     isGameoverSoundPlayed = false;
     flight = new Flight();
@@ -630,6 +633,7 @@ function drawSpaceBackground() {
     pop();
 }
 
+
 function drawGameWin() {
     /* 게임 이겼을 때 결과하면 출력 함수 */
     push();
@@ -647,6 +651,7 @@ function drawGameWin() {
 }
 
 function drawGameOver() {
+    /* 게임오버 사운드 및 그려주는 함수 */
     if(isGameoverSoundPlayed == false) {
         paperDieSound.play();
         isGameoverSoundPlayed = true;
@@ -677,6 +682,7 @@ function drawGameOver() {
 }
 
 function drawTutorial(){
+    /* 튜토리얼 화면 찍어주는 함수 */
     textFont(font);
     image(titleBackground, -width / 2, -height / 2, width, height);
     push();
