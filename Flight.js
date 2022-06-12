@@ -4,25 +4,33 @@ class Flight {
         this.x = 0;
         this.y = 0;
         this.speed = 3;
-        this.damage = 20;
+        this.damage = 1;
         this.bombNumber = 3;
+        this.flightShootDelayCount = 0;
         this.hitDelay = 0;
+        this.state = true;
+        this.bullet = [];
+        for (let i = 0; i < 10; i++){
+            this.bullet[i] = new FlightBullet();
+        }
     }
 
     flightShape() {
         /* 비행기 키보드 이동 및 생성 함수 */
-        this.flightKeyPressed();
+        if(this.state = true) {
+            this.flightKeyPressed();
+        }
 
         fill(125);
         if (this.hitDelay > 0) fill(255, 0, 0);
-        triangle(-5, 2, 0, -3, 5, 2);
-        triangle(-5, 2, -2.5, 2, -3.75, 3.75);
+        triangle(-15, 6, 0, -9, 15, 6);
+        triangle(-15, 6, -7.5, 6, -3.75 * 3, 3.75 * 3);
         fill(0);
-        triangle(-2.5, 2, 0, 2, -1.25, 2.75);
-        triangle(0, 2, 2.5, 2, 1.25, 2.75);
+        triangle(-7.5, 6, 0, 6, -3.75, 2.75 * 3);
+        triangle(0, 6, 7.5, 6, 3.75, 2.75 * 3);
         fill(125);
         if (this.hitDelay > 0) fill(255, 0, 0);
-        triangle(2.5, 2, 5, 2, 3.75, 3.75);
+        triangle(7.5, 6, 15, 6, 3.75 * 3, 3.75 * 3);
         noFill();
     }
 
@@ -49,10 +57,12 @@ class Flight {
 
         /* 스페이스 바를 누를 시 총알이 발사 */
         if (keyIsDown(SPACEBAR)) {
-            if (flightShootDelayCount <= 0) {
-                flightShootDelayCount = PLAYER_SHOOT_DELAY;
-                flightShoot[countShoot % 10].x = flight.x;
-                flightShoot[countShoot % 10].y = flight.y;
+            if (this.flightShootDelayCount <= 0) {
+                lazerSound.setVolume(0.2);
+                lazerSound.play();
+                this.flightShootDelayCount = PLAYER_SHOOT_DELAY;
+                flight.bullet[countShoot % 10].x = flight.x;
+                flight.bullet[countShoot % 10].y = flight.y;
                 countShoot++;
             }
         }
@@ -60,12 +70,10 @@ class Flight {
         /* 폭탄 사용 시 적의 총알 사라짐 */
         if (keyIsDown(70)) {
             if (flightBombDelayCount <= 0 && this.bombNumber > 0) {
+                explosionSound.setVolume(0.4);
+                explosionSound.play();
                 this.bombNumber -= 1;
-                flightBombDelayCount = 180;
-                for (let i = 0; i < 200; i++) {
-                    enemyBullet[i].x = -500;
-                    enemyBullet[i].y = -500;
-                }
+                flightBombDelayCount = 10;
             }
         }
 
@@ -94,7 +102,9 @@ class Flight {
     flightHitBox(enemyBullet, range, hitDelay) {
         /* 비행기 히트박스 함수 */
         if (abs(enemyBullet.x - this.x) < range && abs(enemyBullet.y - this.y) < range) {
-            if (this.hitDelay < 0) {
+            if (this.hitDelay < 0 && this.life > 0) {
+                tearingSound.setVolume(0.3);
+                tearingSound.play();
                 this.hitDelay = hitDelay;
                 flight.life--;
             }
@@ -104,15 +114,16 @@ class Flight {
     isFlightDead() {
         /* 비행기가 죽엇는지 확인하는 함수 */
         if (this.life <= 0) {
+            this.life = 0;
+            flight.state = false;
             return true;
         }
     }
 
     resetStatus() {
         /* 아이템 효과 리셋 함수 */
-        enemyBulletStop = false;
-        flight.speed = 3;
-        flight.damage = 1;
+        enemyStop = false;
+        this.speed = 3;
     }
 
     display() {
@@ -135,6 +146,33 @@ class Flight {
         for (let i = 0; i < 5; i++) {
             rect(posX + height + i * (width - height) / 5, posY, (width - height) / 5, height);
         }
+        pop();
+    }
+
+    resetBullet(){
+        for (let i = 0; i < 10; i++){
+            this.bullet[i] = new FlightBullet();
+        }
+    }
+}
+
+class FlightBullet {
+    /* 유저 총알 */
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.speed = 5;
+    }
+
+    move() {
+        this.y -= this.speed;
+    }
+
+    display() {
+        push();
+        translate(this.x, this.y);
+        fill(0, 255, 0);
+        box(2);
         pop();
     }
 }

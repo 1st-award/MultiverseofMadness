@@ -1,26 +1,30 @@
 class PlayerItem {
-    constructor(vectorSpeed, colorAlpha) {
-        this.initPlayerItem(vectorSpeed, colorAlpha);
+    constructor(vectorSpeed, enable) {
+        this.initPlayerItem(vectorSpeed, enable);
     }
 
     initPlayerItem(vectorSpeed, colorAlpha) {
         this.itemPosition = createVector(0, -350);
         this.itemSpeed = vectorSpeed;
         this.itemRadius = 20;
-        this.colorAlpha = colorAlpha;
-        this.itemType = int(random(3));
-        this.colorVector = this.selectColor();
+        this.itemType = int(random(5));
+        this.texture = this.selectTexture();
         this.countItemDisplayCoolTime = -1;
+        this.enable = enable;
     }
 
-    selectColor() {
+    selectTexture() {
         switch (this.itemType) {
             case ITEM_SPEED_UP:
-                return createVector(255, 0, 0);
+                return speedUpImage;
             case ITEM_DAMAGE_UP:
-                return createVector(0, 255, 0);
+                return swordImage;
             case ITEM_BULLET_STOP:
-                return createVector(0, 0, 255);
+                return sandClockImage;
+            case ITEM_GET_BOMB:
+                return playerBombImage;
+            case ITEM_GET_LIFE:
+                return playerHPImage;
         }
     }
 
@@ -34,10 +38,9 @@ class PlayerItem {
 
     itemListener(flightPosX, flightPosY) {
         /* 비행기가 아이템을 먹엇는지 확인하는 함수 */
-        if (abs(flightPosX - this.itemPosition.x) < 40 && abs(flightPosY - this.itemPosition.y) < 40) {
+        if (abs(flightPosX - this.itemPosition.x) < 40 && abs(flightPosY - this.itemPosition.y) < 40 && flight.state != false) {
             const returnItemEffect = this.itemType;
-            this.initPlayerItem(createVector(0, 0), 0);
-            this.colorAlpha = 0;
+            this.initPlayerItem(createVector(0, 0), false);
             this.countItemDisplayCoolTime = 400;  // frame time
             countItemEffectTime = 300;
             return returnItemEffect;
@@ -53,7 +56,7 @@ class PlayerItem {
         }
         if (this.countItemDisplayCoolTime == 0) {
             this.itemSpeed = createVector(4, 5);
-            this.colorAlpha = 255;
+            this.enable = true;
             this.countItemDisplayCoolTime -= 1;
         }
     }
@@ -62,9 +65,7 @@ class PlayerItem {
         /* 아이템 출력 함수 */
         this.itemCoolTimeListener();
         this.movePlayerItem();
-        push();
-        fill(this.colorVector.x, this.colorVector.y, this.colorVector.z, this.colorAlpha);
-        circle(this.itemPosition.x, this.itemPosition.y, this.itemRadius);
-        pop();
+        if(this.enable)
+            image(this.texture, this.itemPosition.x, this.itemPosition.y, 42, 42);
     }
 }
