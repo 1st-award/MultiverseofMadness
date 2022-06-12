@@ -3,7 +3,7 @@ class PlayerItem {
         this.initPlayerItem(vectorSpeed, enable);
     }
 
-    initPlayerItem(vectorSpeed, colorAlpha) {
+    initPlayerItem(vectorSpeed, enable) {
         this.itemPosition = createVector(0, -350);
         this.itemSpeed = vectorSpeed;
         this.itemRadius = 20;
