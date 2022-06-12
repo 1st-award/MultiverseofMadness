@@ -502,6 +502,7 @@ function keyPressed() {
             selectSound.play();
             if (titleState == 0) {
                 mode = MODE_IN_GAME;
+                resetting();
             }
             if (titleState == 1) {
                 mode = MODE_RANKING_BOARD;
