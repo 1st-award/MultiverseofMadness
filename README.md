@@ -1,5 +1,5 @@
 # 종이 비행기의 모험
-[게임하러가기](https://1st-award.github.io/MultiverseofMadness/)
+[게임하러가기](https://1st-award.github.io/MultiverseofMadness/) <br>
 ![image](https://user-images.githubusercontent.com/54760813/173228173-f05a68aa-3243-4830-b9ab-0b2da1d86f21.png) <br>
 
 ## 게임 설명
